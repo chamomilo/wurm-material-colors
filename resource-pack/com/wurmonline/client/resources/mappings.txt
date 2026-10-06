@@ -1,0 +1,10 @@
+shader.dirlight.fragment = programs/modern/dirlight.fragment.shader
+shader.mask_gbuffer.fragment = programs/modern/mask_gbuffer.fragment.shader
+shader.pointlight.fragment = programs/modern/pointlight.fragment.shader
+shader.skin_reflection_gbuffer.fragment = programs/modern/skin_reflection_gbuffer.fragment.shader
+program.player_skin_reflection = programs/modern/skin_gbuffer.program
+program.player_armor_compositor = programs/static_masked_nolight.program
+shader.player_armor_compositor.fragment = programs/masked_nolight.fragment.shader
+program.player_metal_mask = programs/playerMetalMask.program
+shader.player_metal_mask.fragment = programs/playerMetalMask.fragment.shader
+armor.material.world.mask = clothing/Armor/Plate/material_all_mm.dds

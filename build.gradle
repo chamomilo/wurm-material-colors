@@ -1,0 +1,193 @@
+import java.util.Properties
+
+plugins {
+    id 'java'
+}
+
+group = 'org.armormaterialcolors'
+version = '0.3.18'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+def localProperties = new Properties()
+def localPropertiesFile = file('local.properties')
+if (localPropertiesFile.isFile()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+
+def configuredLibraryDirectory = findProperty('wurmClientLibDir')
+if (configuredLibraryDirectory == null || configuredLibraryDirectory.toString().trim().isEmpty()) {
+    configuredLibraryDirectory = localProperties.getProperty('wurmClientLibDir')
+}
+if (configuredLibraryDirectory == null || configuredLibraryDirectory.toString().trim().isEmpty()) {
+    configuredLibraryDirectory = System.getenv('WURM_CLIENT_LIBS')
+}
+if (configuredLibraryDirectory == null || configuredLibraryDirectory.toString().trim().isEmpty()) {
+    configuredLibraryDirectory = 'C:/projects/wurm/libs'
+}
+
+def wurmClientLibDir = file(configuredLibraryDirectory.toString())
+def requiredClientLibraries = [
+        'client-patched.jar',
+        'common.jar',
+        'javassist.jar',
+        'modlauncher.jar'
+].collect { new File(wurmClientLibDir, it) }
+
+requiredClientLibraries.each { library ->
+    if (!library.isFile()) {
+        throw new GradleException('Required Wurm client library is missing: ' + library)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly files(requiredClientLibraries)
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation files(requiredClientLibraries)
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    systemProperty 'wurmClientLibDir', wurmClientLibDir.absolutePath
+    systemProperty 'armorMaterialColorsProjectDir', projectDir.absolutePath
+    testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+    }
+}
+
+jar {
+    archiveFileName = "armor-material-colors-${project.version}.jar"
+}
+
+def generatedReflectionResources = file(
+        "${buildDir}/generated/reflection-resources")
+def armorMaterialMaskPaths = [
+        'clothing/Armor/Plate/material_all_mm.dds',
+        'clothing/Armor/Chain/material_all_mm.dds'
+]
+
+task generateArmorMaterialMasks {
+    outputs.files(armorMaterialMaskPaths.collect {
+        new File(generatedReflectionResources, it)
+    })
+    doLast {
+        // 4x4 DXT1 DDS. Every texel is pure green: Wurm's material channel.
+        // Keeping the tiny binary reproducible here avoids checking in an
+        // opaque generated asset.
+        byte[] mask = java.util.Base64.getDecoder().decode(
+                'RERTIHwAAAAHEAgABAAAAAQAAAAcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' +
+                'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAEAAAARFhUMSAAAAAAAAAA' +
+                'AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAADgB+AHAAAAAA==')
+        armorMaterialMaskPaths.each { relativePath ->
+            File output = new File(generatedReflectionResources, relativePath)
+            output.parentFile.mkdirs()
+            output.bytes = mask
+        }
+    }
+}
+
+task resourcePack(type: Jar, dependsOn: generateArmorMaterialMasks) {
+    archiveFileName = "armor-material-colors-resources-${project.version}.jar"
+    destinationDirectory = file("${buildDir}/resource-pack")
+    // Wurm mapping values are relative to the pack root (programs/..., not
+    // the Java package path used by client-patched.jar).
+    from('resource-pack/com/wurmonline/client/resources')
+    from(generatedReflectionResources)
+}
+
+task verifyArtifact(dependsOn: [jar, resourcePack]) {
+    doLast {
+        def contents = zipTree(jar.archiveFile.get().asFile)
+        [
+                'org/armormaterialcolors/client/ArmorMaterialColorsMod.class',
+                'org/armormaterialcolors/client/ReflectionResources.class',
+                'org/armormaterialcolors/client/ReflectionTuning.class',
+                'org/armormaterialcolors/client/PlayerArmorReflection.class',
+                'org/armormaterialcolors/client/WorldArmorMasks.class'
+        ]
+                .each { requiredClass ->
+                    if (contents.matching { include requiredClass }.files.empty) {
+                        throw new GradleException('Mod artifact is missing ' + requiredClass)
+                    }
+                }
+
+        def shaderContents = zipTree(resourcePack.archiveFile.get().asFile)
+        [
+                'mappings.txt',
+                'programs/modern/mask_gbuffer.fragment.shader',
+                'programs/modern/skin_gbuffer.program',
+                'programs/modern/skin_reflection_gbuffer.fragment.shader',
+                'programs/modern/dirlight.fragment.shader',
+                'programs/modern/pointlight.fragment.shader',
+                'programs/static_masked_nolight.program',
+                'programs/masked_nolight.fragment.shader',
+                'programs/playerMetalMask.program',
+                'programs/playerMetalMask.fragment.shader',
+                'clothing/Armor/Plate/properties.xml',
+                'clothing/Armor/Plate/material_all_mm.dds',
+                'clothing/Armor/Chain/properties.xml',
+                'clothing/Armor/Chain/material_all_mm.dds'
+        ].each { requiredResource ->
+            if (shaderContents.matching { include requiredResource }.files.empty) {
+                throw new GradleException(
+                        'Reflection resource pack is missing ' + requiredResource)
+            }
+        }
+        if (!shaderContents.matching {
+            include 'com/wurmonline/client/resources/**'
+        }.files.empty) {
+            throw new GradleException(
+                'Reflection shaders must be stored relative to the resource-pack root')
+        }
+
+        def mappings = shaderContents.matching { include 'mappings.txt' }
+                .singleFile
+                .getText('UTF-8')
+        [
+                'shader.dirlight.fragment = programs/modern/dirlight.fragment.shader',
+                'shader.mask_gbuffer.fragment = programs/modern/mask_gbuffer.fragment.shader',
+                'shader.pointlight.fragment = programs/modern/pointlight.fragment.shader',
+                'shader.skin_reflection_gbuffer.fragment = programs/modern/skin_reflection_gbuffer.fragment.shader',
+                'program.player_skin_reflection = programs/modern/skin_gbuffer.program',
+                'program.player_armor_compositor = programs/static_masked_nolight.program',
+                'shader.player_armor_compositor.fragment = programs/masked_nolight.fragment.shader',
+                'program.player_metal_mask = programs/playerMetalMask.program',
+                'shader.player_metal_mask.fragment = programs/playerMetalMask.fragment.shader'
+        ].each { requiredMapping ->
+            if (!mappings.contains(requiredMapping)) {
+                throw new GradleException(
+                        'Reflection resource pack is missing mapping: ' + requiredMapping)
+            }
+        }
+    }
+}
+
+task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack]) {
+    archiveFileName = "armor-material-colors-${project.version}.zip"
+    destinationDirectory = file("${buildDir}/distributions")
+
+    into('mods/armor-material-colors') {
+        from jar
+        from resourcePack
+        from 'README.md'
+        from 'LICENSE'
+        into('docs') { from 'docs/material-colors.png' }
+    }
+    into('mods') {
+        from 'mods/armor-material-colors.properties'
+    }
+}
+
+build.dependsOn verifyArtifact
+
+ext.chamomiloUpdate = [id: 'armor-material-colors', name: 'Material Colors', repo: 'chamomilo/wurm-material-colors', asset: 'armor-material-colors-{version}.zip', properties: 'mods/armor-material-colors.properties', main: 'src/main/java/org/armormaterialcolors/client/ArmorMaterialColorsMod.java']
+apply from: 'gradle/chamomilo-updater.gradle'

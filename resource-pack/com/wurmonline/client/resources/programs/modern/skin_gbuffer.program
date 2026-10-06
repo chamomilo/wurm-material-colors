@@ -1,0 +1,2 @@
+vertexshader shader.skin_gbuffer.vertex
+pixelshader shader.skin_reflection_gbuffer.fragment

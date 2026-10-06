@@ -1,0 +1,32 @@
+<properties>
+    <chainBoot.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainBoot.wom>
+    <chainBootPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainBootPile.wom>
+    <chainGauntlet.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainGauntlet.wom>
+    <chainGauntletPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainGauntletPile.wom>
+    <chainJacket.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainJacket.wom>
+    <chainJacketPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainJacketPile.wom>
+    <chainPants.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainPants.wom>
+    <chainPantsPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainPantsPile.wom>
+    <chainSleeve.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainSleeve.wom>
+    <chainSleevePile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </chainSleevePile.wom>
+</properties>

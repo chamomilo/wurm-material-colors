@@ -1,0 +1,32 @@
+<properties>
+    <plateGauntlet.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateGauntlet.wom>
+    <plateGauntletPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateGauntletPile.wom>
+    <plateJacket.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateJacket.wom>
+    <plateJacketPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateJacketPile.wom>
+    <platePants.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </platePants.wom>
+    <platePantsPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </platePantsPile.wom>
+    <plateSabaton.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateSabaton.wom>
+    <plateSabatonPile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateSabatonPile.wom>
+    <plateSleeve.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateSleeve.wom>
+    <plateSleevePile.wom>
+        <modelProperties><mask>material_all_mm.dds</mask></modelProperties>
+    </plateSleevePile.wom>
+</properties>

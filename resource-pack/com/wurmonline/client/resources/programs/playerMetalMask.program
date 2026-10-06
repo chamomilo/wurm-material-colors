@@ -1,0 +1,2 @@
+vertexshader shader.tex0.vertex
+pixelshader shader.player_metal_mask.fragment

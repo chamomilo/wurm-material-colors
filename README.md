@@ -1,4 +1,4 @@
-# Material Colors 0.3.18
+# Material Colors 0.3.19
 
 ![Material Colors in Wurm Unlimited](docs/material-colors.png)
 
@@ -62,6 +62,9 @@ renderer keeps the colour improvements but does not run the reflection pass.
 Normal operation is silent in the client log. Only shader/resource loading
 failures and invalid configuration values are reported.
 
-## Chamomilo versions
+## Updates
 
-Version 0.3.18 embeds the shared Chamomilo updater. A versions window opens at every launch after the HUD is ready and lists all mods from the public GitHub catalogue, including disabled and absent installations. UPDATE opens a newer installed release; INSTALL opens a release for an absent mod. ZIP installation remains manual. The public catalogue is refreshed without requiring new client binaries; a verified copy is retained for offline startup. All Chamomilo updater copies share one window, with a thin high-resolution wood-and-metal frame.
+Version 0.3.19 embeds the canonical Chamomilo updater 1.1.0. All compatible
+Chamomilo mods share one update check and one window available from Wurm's
+`Mod updates` menu. The updater only opens the GitHub release page; ZIP
+installation remains manual.

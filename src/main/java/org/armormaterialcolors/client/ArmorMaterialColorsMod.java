@@ -10,8 +10,13 @@ import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import org.gotti.wurmunlimited.modloader.classhooks.HookManager;
 import org.gotti.wurmunlimited.modloader.interfaces.Configurable;
+import org.gotti.wurmunlimited.modloader.interfaces.Initable;
+import org.gotti.wurmunlimited.modloader.interfaces.ModEntry;
+import org.gotti.wurmunlimited.modloader.interfaces.ModListener;
 import org.gotti.wurmunlimited.modloader.interfaces.PreInitable;
 import org.gotti.wurmunlimited.modloader.interfaces.WurmClientMod;
+import org.chamomilo.wurm.update.SharedUpdateCoordinator;
+import org.chamomilo.wurm.update.SharedUpdateHooks;
 
 import java.util.Locale;
 import java.util.Map;
@@ -20,14 +25,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class ArmorMaterialColorsMod
-        implements org.gotti.wurmunlimited.modloader.interfaces.ModListener, WurmClientMod, Configurable, PreInitable, org.gotti.wurmunlimited.modloader.interfaces.Initable {
-    public static final String VERSION = "0.3.18";
+        implements WurmClientMod, Configurable, PreInitable, Initable,
+        ModListener {
+    public static final String VERSION = "0.3.19";
     static final float DEFAULT_REFLECTION_STRENGTH = 0.80f;
     static final float REFLECTIVE_ITEM_MARKER = -1.0f;
     static final float REFLECTIVE_ARMOR_MARKER = -2.0f;
 
     private static volatile String resourcePack =
-            "mods/armor-material-colors/armor-material-colors-resources-0.3.18.jar";
+            "mods/armor-material-colors/armor-material-colors-resources-0.3.19.jar";
 
     private static final Logger LOG = Logger.getLogger("ArmorMaterialColors");
 
@@ -44,7 +50,7 @@ public final class ArmorMaterialColorsMod
 
     @Override
     public void preInit() {
-        org.chamomilo.wurm.update.SharedUpdateHooks.install();
+        SharedUpdateHooks.install();
         try {
             installHooks(HookManager.getInstance().getClassPool());
         } catch (Throwable error) {
@@ -284,7 +290,7 @@ public final class ArmorMaterialColorsMod
     static void resetSettingsForTests() {
         ReflectionTuning.resetDefaults();
         resourcePack =
-                "mods/armor-material-colors/armor-material-colors-resources-0.3.18.jar";
+                "mods/armor-material-colors/armor-material-colors-resources-0.3.19.jar";
     }
 
     /**
@@ -428,9 +434,13 @@ public final class ArmorMaterialColorsMod
                 || "electrum".equals(material);
     }
 
+    @Override
+    public void init() {
+        SharedUpdateHooks.registerHost("armor-material-colors");
+    }
 
-    @Override public void init() { org.chamomilo.wurm.update.SharedUpdateHooks.registerHost("armor-material-colors"); }
-
-    @Override public void modInitialized(org.gotti.wurmunlimited.modloader.interfaces.ModEntry<?> entry) {
-        org.chamomilo.wurm.update.SharedUpdateCoordinator.modInitialized(entry);
-    }}
+    @Override
+    public void modInitialized(ModEntry<?> entry) {
+        SharedUpdateCoordinator.modInitialized(entry);
+    }
+}

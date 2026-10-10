@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.armormaterialcolors'
-version = '0.3.19'
+version = '0.3.23'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -64,6 +64,17 @@ test {
     }
 }
 
+// Optional hardware verification; creates a hidden Pbuffer and never starts or
+// writes to the game. Override the read-only native-library path on other hosts.
+task verifyMaterialOpacityGpu(type: JavaExec, dependsOn: testClasses) {
+    classpath = sourceSets.test.runtimeClasspath
+    main = 'org.armormaterialcolors.client.MaterialOpacityGpuProbe'
+    systemProperty 'armorMaterialColorsProjectDir', projectDir.absolutePath
+    systemProperty 'org.lwjgl.librarypath', findProperty('wurmNativeLibDir') ?:
+            'C:/Program Files (x86)/Steam/steamapps/common/Wurm Unlimited/WurmLauncher/nativelibs'
+    args new File(wurmClientLibDir, 'client-patched.jar').absolutePath
+}
+
 jar {
     archiveFileName = "armor-material-colors-${project.version}.jar"
 }
@@ -112,7 +123,8 @@ task verifyArtifact(dependsOn: [jar, resourcePack]) {
                 'org/armormaterialcolors/client/ReflectionResources.class',
                 'org/armormaterialcolors/client/ReflectionTuning.class',
                 'org/armormaterialcolors/client/PlayerArmorReflection.class',
-                'org/armormaterialcolors/client/WorldArmorMasks.class'
+                'org/armormaterialcolors/client/WorldArmorMasks.class',
+                'org/armormaterialcolors/client/MaterialColorOpacity.class'
         ]
                 .each { requiredClass ->
                     if (contents.matching { include requiredClass }.files.empty) {
@@ -171,19 +183,53 @@ task verifyArtifact(dependsOn: [jar, resourcePack]) {
     }
 }
 
-task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack]) {
+task generateReadmeText {
+    inputs.file 'README.md'
+    outputs.file 'README.txt'
+    doLast {
+        def lines = file('README.md').readLines('UTF-8').findAll {
+            !(it ==~ /\s*!\[.*\]\(.*\)\s*/) && !it.startsWith('```')
+        }.collect { line ->
+            line.replaceFirst(/^#{1,6}\s+/, '')
+                    .replaceAll(/\[([^\]]+)\]\(([^)]+)\)/, '$1 ($2)')
+                    .replace('**', '').replace('`', '')
+        }
+        file('README.txt').setText(lines.join('\n').replaceAll(/\n{3,}/, '\n\n') + '\n', 'UTF-8')
+    }
+}
+
+task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack, generateReadmeText]) {
     archiveFileName = "armor-material-colors-${project.version}.zip"
     destinationDirectory = file("${buildDir}/distributions")
 
     into('mods/armor-material-colors') {
         from jar
         from resourcePack
-        from 'README.md'
+        from 'README.txt'
         from 'LICENSE'
-        into('docs') { from 'docs/material-colors.png' }
     }
     into('mods') {
         from 'mods/armor-material-colors.properties'
+    }
+    doLast {
+        def expected = [
+            "mods/armor-material-colors/armor-material-colors-${project.version}.jar",
+            "mods/armor-material-colors/armor-material-colors-resources-${project.version}.jar",
+            'mods/armor-material-colors/README.txt',
+            'mods/armor-material-colors/LICENSE',
+            'mods/armor-material-colors.properties'
+        ].collect { it.toString() }.toSet()
+        new java.util.zip.ZipFile(archiveFile.get().asFile).withCloseable { zip ->
+            def actual = zip.entries().findAll { !it.directory }.collect { it.name }.toSet()
+            if (actual != expected) {
+                throw new GradleException('Distribution contents differ: missing=' +
+                        (expected - actual) + ', extra=' + (actual - expected))
+            }
+            if (zip.getInputStream(zip.getEntry('mods/armor-material-colors/README.txt'))
+                    .getText('UTF-8') != file('README.txt').getText('UTF-8')) {
+                throw new GradleException('Packaged README.txt does not match this release')
+            }
+        }
     }
 }
 

@@ -184,6 +184,41 @@ public class ArmorMaterialColorsModTest {
     }
 
     @Test
+    public void seryllAndAdamantineUseTheirStockHueAndExistingReflectionProfiles() {
+        for (String material : new String[]{"seryll", "adamantine"}) {
+            float[] rgb = "seryll".equals(material)
+                    ? new float[]{0.650f, 0.170f, 0.060f}
+                    : new float[]{0.550f, 0.670f, 0.860f};
+            for (String family : new String[]{"plate", "chain"}) {
+                for (String part : new String[]{"torso", "leg", "sleeve", "hand", "foot", "head"}) {
+                    String model = "model.armour." + part + "." + family + "."
+                            + material + ".equipped.male";
+                    Color color = ArmorMaterialColorsMod.materialColorForModel(model);
+                    assertColor(color, rgb[0], rgb[1], rgb[2]);
+                    assertEquals(model, ArmorMaterialColorsMod.REFLECTIVE_ARMOR_MARKER,
+                            color.a, EPSILON);
+                }
+            }
+            for (String model : new String[]{"model.weapon.halberd.", "model.weapon.swordlong.",
+                    "model.tool.scythe.", "model.tool.shovel.", "model.tool.hammer.",
+                    "model.shield.large.", "model.armour.head.openhelm.",
+                    "model.armour.head.greathelm.", "model.armour.head.basinet."}) {
+                String equipped = model + material + ".equipped";
+                Color color = ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
+                        equipped, new Color(rgb[0], rgb[1], rgb[2]));
+                assertEquals(equipped, ArmorMaterialColorsMod.REFLECTIVE_ITEM_MARKER,
+                        color.a, EPSILON);
+                // Equipment brightening preserves the stock hue ratios.
+                assertEquals(rgb[0] / rgb[2], color.r / color.b, EPSILON);
+                assertEquals(rgb[1] / rgb[2], color.g / color.b, EPSILON);
+                assertEquals(material, ArmorMaterialColorsMod.reflectiveMaterialForModel(equipped));
+            }
+        }
+        assertNull(ArmorMaterialColorsMod.reflectiveMaterialForModel("model.tool.hammer.steel"));
+        assertNull(ArmorMaterialColorsMod.reflectiveMaterialForModel("model.tool.hammer.seryllwood"));
+    }
+
+    @Test
     public void redirectsOnlyTheTwoPlayerPrograms() {
         assertEquals("program.player_skin_reflection",
                 PlayerArmorReflection.redirectProgramName(

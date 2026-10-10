@@ -1,70 +1,99 @@
-# Material Colors 0.3.19
+# Material Colors
 
 ![Material Colors in Wurm Unlimited](docs/material-colors.png)
 
-Small Wurm Unlimited client mod that improves material colours for worn plate
-and chain armour, weapons, and tools. Gold and Silver items that use Wurm's
-material mask also receive 80% environment reflection in the modern renderer.
+A client mod for Wurm Unlimited that brings out metal colours on equipment
+and adds environment reflections to Gold, Silver, Seryll and Adamantine.
 
-The mod keeps the vanilla models, textures, masks, and material hues. It makes
-sure that the material colour is present in the player armour texture-builder
-map before the client composites the final player texture.
+Version **0.3.23** includes Chamomilo Updater **1.2.7** and Chamomilo UI **0.4.10**.
 
-For `model.weapon.*` and `model.tool.*`, it also normalises the stock metal RGB
-filter so the darkest channel ratios are retained but the brightest channel is
-not needlessly dimmed. This makes gold, copper, bronze, seryll, adamantine, and
-other supported metals visibly distinct on models that have a material mask.
-Wood materials and iron are left unchanged. Models without a material mask are
-also left untouched so wooden handles are never recoloured accidentally. The
-stock standalone Plate and Chain models are the exception: the game ships them
-without any material mask even though the meshes are entirely metal, so this
-pack supplies a full-metal mask for those two armour families and their piles.
-Wurm normally derives model properties only from the JAR that owns the WOM;
-the mod therefore substitutes just its synthetic armour-mask filename inside
-the Collada texture-preload method after each stock Plate/Chain WOM has loaded.
+## Features
 
-The reflection shader uses a short screen-space ray to pick up nearby visible
-objects, with a time-of-day-aware sky/ground fallback when the reflected area is
-outside the screen. Gold also tints its reflected light instead of becoming
-silver-grey. Reflection is restricted to the green material-mask channel,
-so handles and other non-metal parts retain the stock rendering. The default
-strength can be adjusted with `reflectionStrength` in the mod properties.
-In caves, screen-space samples are unlit G-buffer albedo; the shader attenuates
-them with cave irradiance rather than treating pale rock textures as light.
-Actual lantern and torch brightness is then added by the local-light pass.
+- Restores each metal's stock colour on worn plate and chain armour.
+- Makes metal colours clearer on weapons and tools while preserving the stock
+  hue. Iron and wooden materials keep their original appearance.
+- Adds reflections to Gold, Silver, Seryll and Adamantine armour, helmets,
+  weapons, tools, shields and other items with a metal material mask.
+- Keeps Seryll's red/copper hue and Adamantine's blue hue in reflected light.
+- Uses softer reflections on plate and chain armour and sharper reflections
+  on separate masked items. The default reflection strength is 80%.
+- Keeps equipped metal and paperdolls visible without recolouring wooden
+  handles or filling transparent texture cutouts.
 
-Reflective Gold/Silver Plate and Chain use a separate armour surface profile.
-A stable UV-space hammered micro-normal breaks the single broad mirror image,
-softens direct-light glints, and slightly lowers shininess without reducing the
-configured reflection amount. Screen-space fallback reflections are filtered
-over neighbouring pixels on armour only. Gold/Silver weapons, tools, and other
-masked items retain the sharper reflection profile; all other materials remain
-non-reflective.
+Reflections require Wurm's modern deferred renderer. The legacy renderer
+retains the colour improvements. Reflection detail varies with the visible
+scene, viewing angle and lighting because it uses screen-space reflections
+with a sky/ground fallback.
 
-The reflection mask stored in the composited player texture uses a nearly
-opaque `254/255` alpha marker. This keeps paperdolls and portrait avatars opaque
-while the modern 3D skin shader can still recover the armour-only mask.
-
-Reflection colour/brightness, SSR reach and thickness, and separate
-sunlight/local-light glints can be adjusted in
-`mods/armor-material-colors.properties`. Values are loaded at client startup.
-
-This shader extension targets Wurm's modern deferred renderer. The legacy
-renderer keeps the colour improvements but does not run the reflection pass.
+The mod uses the original models, textures and metal masks. It supplies a
+full-metal mask for the stock standalone plate/chain armour models and their
+piles. Other models without a material mask retain their original rendering.
 
 ## Installation
 
 1. Install Ago's Wurm Unlimited Client Mod Launcher.
-2. Extract the distribution archive into `WurmLauncher` so that the supplied
-   `mods` directory is merged with the existing one.
-3. Restart the client and re-equip or drop a Gold/Silver item.
+2. Download the ZIP from the [latest release](https://github.com/chamomilo/wurm-material-colors/releases/latest).
+3. Close the client and extract the ZIP into WurmLauncher, merging the supplied
+   mods directory with the existing one.
+4. When upgrading, remove the previous armor-material-colors JAR and its
+   matching resources JAR from mods/armor-material-colors. Keep the two new
+   version-matched JARs and the supplied properties file.
+5. Restart the client and re-equip or drop the affected equipment to refresh it.
 
-Normal operation is silent in the client log. Only shader/resource loading
-failures and invalid configuration values are reported.
+The ZIP includes README.txt and the licence. The project screenshot and
+Markdown documentation are kept in the GitHub repository.
+
+## Configuration
+
+Edit `mods/armor-material-colors.properties` while the client is closed.
+Changes take effect after restarting the client.
+
+- `reflectionStrength`: overall reflection amount, from 0 to 1; default 0.80.
+- `reflectionTint`: how much the metal hue colours reflected light; default 0.72.
+- `sunGlintStrength`, `localGlintStrength`, `glintSharpness`: direct-light highlights.
+- `environmentBrightness`, `reflectionContrast`, `skyBrightness`,
+  `groundBrightness`, `caveBrightness`: reflected environment brightness.
+- `ssrDetail`, `ssrRayDistance`, `ssrThickness`: screen-space reflection detail
+  and reach.
+
+Keep `classpath` and `resourcePack` matched to the installed release filenames.
+Normal operation is silent; loading failures and invalid settings are logged.
 
 ## Updates
 
-Version 0.3.19 embeds the canonical Chamomilo updater 1.1.0. All compatible
-Chamomilo mods share one update check and one window available from Wurm's
-`Mod updates` menu. The updater only opens the GitHub release page; ZIP
-installation remains manual.
+The embedded Chamomilo updater shares one update check and one Mod updates
+window with compatible Chamomilo mods. It opens the release page; installation
+is manual. Its language selector applies the chosen language to capable
+installed mods. English, Brazilian Portuguese, German and Russian are supported
+by the updater interface.
+
+## Building
+
+Use JDK 8, the Gradle wrapper and the Wurm client development libraries
+client-patched.jar, common.jar, javassist.jar and modlauncher.jar. Set
+WURM_CLIENT_LIBS or pass `-PwurmClientLibDir=/path/to/libs`.
+
+The canonical shared updater is built and verified during release builds.
+Set CHAMOMILO_UPDATER_REFERENCE or pass
+`-PchamomiloUpdaterReference=/path/to/updater` when it is outside the default
+development location. The updater includes its pinned Chamomilo UI dependency.
+If JavaFX is not included in the JDK, pass `-PwurmJavaFxJar=/path/to/jfxrt.jar`.
+
+```text
+gradlew clean build verifyMaterialOpacityGpu dist
+```
+
+The optional GPU check needs Wurm's LWJGL native libraries. Set
+`-PwurmNativeLibDir=/path/to/nativelibs` for that check. It uses a hidden offscreen
+context and does not launch or modify the game. It checks all four reflective
+metals in the stock forward shaders and the modern material-mask shader,
+including instanced drawing, handles and transparent cutouts.
+
+The installable ZIP is written to build/distributions. Its contents and the
+exact embedded updater module are checked before the distribution task completes.
+README.txt is generated from this README during the build, without the image
+or Markdown formatting.
+
+## Licence
+
+See [LICENSE](LICENSE) for the GNU General Public License, version 3.

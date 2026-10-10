@@ -7,6 +7,7 @@ import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.expr.ExprEditor;
+import javassist.expr.FieldAccess;
 import javassist.expr.MethodCall;
 import org.gotti.wurmunlimited.modloader.classhooks.HookManager;
 import org.gotti.wurmunlimited.modloader.interfaces.Configurable;
@@ -27,13 +28,13 @@ import java.util.logging.Logger;
 public final class ArmorMaterialColorsMod
         implements WurmClientMod, Configurable, PreInitable, Initable,
         ModListener {
-    public static final String VERSION = "0.3.19";
+    public static final String VERSION = "0.3.23";
     static final float DEFAULT_REFLECTION_STRENGTH = 0.80f;
     static final float REFLECTIVE_ITEM_MARKER = -1.0f;
     static final float REFLECTIVE_ARMOR_MARKER = -2.0f;
 
     private static volatile String resourcePack =
-            "mods/armor-material-colors/armor-material-colors-resources-0.3.19.jar";
+            "mods/armor-material-colors/armor-material-colors-resources-0.3.23.jar";
 
     private static final Logger LOG = Logger.getLogger("ArmorMaterialColors");
 
@@ -134,6 +135,19 @@ public final class ArmorMaterialColorsMod
                 "org.armormaterialcolors.client.ReflectionTuning"
                         + ".applyToBoundProgram($0);");
 
+        // Forward rendering (including paperdolls and some world passes) uses
+        // stock masked shaders. Their material alpha is opacity, so -1/-2
+        // makes only the green-mask metal disappear. Keep the private marker
+        // only for our deferred shader. Substitute reads while binding rather
+        // than mutating a primitive that other passes can reuse.
+        CtClass bindings = pool.getCtClass(
+                "com.wurmonline.client.renderer.shaders.ProgramBindings");
+        CtMethod bind = bindings.getDeclaredMethod("bind", new CtClass[]{
+                pool.get("com.wurmonline.client.renderer.backend.Primitive"),
+                CtClass.intType
+        });
+        installMaterialOpacityHook(bind);
+
         CtClass builder = pool.getCtClass(
                 "com.wurmonline.client.renderer.cell.PlayerArmorBuilder");
 
@@ -197,6 +211,22 @@ public final class ArmorMaterialColorsMod
                         + ".queueMetalMask($0, $1, $2, $3, $4, $5, $6, $9); }");
     }
 
+    static void installMaterialOpacityHook(CtMethod method)
+            throws CannotCompileException {
+        method.instrument(new ExprEditor() {
+            @Override
+            public void edit(FieldAccess access) throws CannotCompileException {
+                if (access.isReader()
+                        && "com.wurmonline.client.renderer.backend.Primitive"
+                        .equals(access.getClassName())
+                        && "materialColor".equals(access.getFieldName())) {
+                    access.replace("{ $_ = org.armormaterialcolors.client"
+                            + ".MaterialColorOpacity.forProgram($proceed(), $0.program); }");
+                }
+            }
+        });
+    }
+
     /**
      * Makes the stock material filters visible on weapons and tools. Wurm's
      * shader multiplies a dark grey diffuse texture by the values from
@@ -248,7 +278,7 @@ public final class ArmorMaterialColorsMod
 
         String[] tokens = modelName.toLowerCase(Locale.ROOT).split("\\.");
         for (int index = tokens.length - 1; index >= 0; index--) {
-            if ("gold".equals(tokens[index]) || "silver".equals(tokens[index])) {
+            if (isReflectiveMetal(tokens[index])) {
                 return tokens[index];
             }
         }
@@ -290,7 +320,7 @@ public final class ArmorMaterialColorsMod
     static void resetSettingsForTests() {
         ReflectionTuning.resetDefaults();
         resourcePack =
-                "mods/armor-material-colors/armor-material-colors-resources-0.3.19.jar";
+                "mods/armor-material-colors/armor-material-colors-resources-0.3.23.jar";
     }
 
     /**
@@ -375,7 +405,7 @@ public final class ArmorMaterialColorsMod
         // The negative alpha is metadata, never opacity. The replacement
         // player compositor shader preserves the source texture's alpha;
         // PlayerArmorReflection consumes this flag to add the baked mask.
-        float marker = "gold".equals(material) || "silver".equals(material)
+        float marker = isReflectiveMetal(material)
                 ? REFLECTIVE_ARMOR_MARKER
                 : 1.0f;
         return new Color(red, green, blue, marker);
@@ -416,6 +446,13 @@ public final class ArmorMaterialColorsMod
 
         int end = start + armorToken.length();
         return end == modelName.length() || modelName.charAt(end) == '.' ? end : -1;
+    }
+
+    private static boolean isReflectiveMetal(String material) {
+        return "gold".equals(material)
+                || "silver".equals(material)
+                || "seryll".equals(material)
+                || "adamantine".equals(material);
     }
 
     private static boolean isTintedMetal(String material) {

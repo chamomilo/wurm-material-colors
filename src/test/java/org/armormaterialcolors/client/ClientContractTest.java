@@ -97,6 +97,9 @@ public class ClientContractTest {
         assertTrue(pool.get(
                 "com.wurmonline.client.renderer.shaders.Program")
                 .toBytecode().length > 0);
+        assertTrue(pool.get(
+                "com.wurmonline.client.renderer.shaders.ProgramBindings")
+                .toBytecode().length > 0);
     }
 
     @Test

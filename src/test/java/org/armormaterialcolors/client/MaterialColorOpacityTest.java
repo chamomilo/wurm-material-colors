@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 public class MaterialColorOpacityTest {
     @Test
     public void allReflectiveMetalsStayOpaqueInStockShaders() {
-        for (String material : new String[]{"gold", "silver", "seryll", "adamantine"}) {
+        for (String material : new String[]{"gold", "silver", "seryll", "adamantine", "glimmersteel"}) {
             for (String modelPrefix : new String[]{"model.weapon.halberd.",
                     "model.tool.scythe.", "model.armour.head.openhelm.",
                     "model.shield.large.", "model.tool.hammer.",

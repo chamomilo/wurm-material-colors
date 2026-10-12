@@ -25,45 +25,45 @@ public class ArmorMaterialColorsModTest {
     }
 
     @Test
-    public void ignoresUnrelatedModelsAndIron() {
+    public void ignoresUnrelatedArmorModelsAndIncludesIron() {
         assertNull(ArmorMaterialColorsMod.materialForSupportedArmor(
                 "model.armour.torso.leather.gold"));
-        assertNull(ArmorMaterialColorsMod.materialColorForModel(
-                "model.armour.torso.plate.iron"));
+        assertColor(ArmorMaterialColorsMod.materialColorForModel(
+                "model.armour.torso.plate.iron"), 0.62f, 0.66f, 0.70f);
         assertNull(ArmorMaterialColorsMod.materialColorForModel(
                 "model.weapon.sword.gold"));
     }
 
     @Test
-    public void findsMetalsOnlyOnWeaponAndToolModels() {
+    public void findsMetalsOnAllItemFamilies() {
         assertEquals("gold", ArmorMaterialColorsMod.materialForSupportedEquipment(
                 "model.weapon.swordlong.gold"));
         assertEquals("copper", ArmorMaterialColorsMod.materialForSupportedEquipment(
                 "model.tool.hammer.copper"));
         assertEquals("adamantine", ArmorMaterialColorsMod.materialForSupportedEquipment(
                 "model.weapon.axe.medium.adamantine.equipped"));
-        assertNull(ArmorMaterialColorsMod.materialForSupportedEquipment(
+        assertEquals("gold", ArmorMaterialColorsMod.materialForSupportedEquipment(
                 "model.armour.torso.plate.gold"));
         assertNull(ArmorMaterialColorsMod.materialForSupportedEquipment(
                 "model.tool.hammer.oakenwood"));
     }
 
     @Test
-    public void brightensEquipmentColorWithoutChangingStockHueRatios() {
+    public void replacesTheStockTintWithTheReferencePaletteWithoutNormalizing() {
         Color stockGold = new Color(0.968f, 0.721f, 0.208f);
         Color enhancedGold = ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
                 "model.weapon.swordlong.gold", stockGold);
 
         assertColor(enhancedGold,
-                1.0f, 0.721f / 0.968f, 0.208f / 0.968f);
+                1.45f, 1.10f, 0.12f);
         assertEquals(-1.0f, enhancedGold.a, EPSILON);
     }
 
     @Test
-    public void leavesIronAndWoodColorsUntouched() {
+    public void recolorsIronEvenWithoutAStockTintAndKeepsWoodUntouched() {
         Color fallback = new Color(0.7f, 0.7f, 0.7f);
-        assertSame(fallback, ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
-                "model.tool.hammer.iron", fallback));
+        assertColor(ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
+                "model.tool.hammer.iron", null), 0.62f, 0.66f, 0.70f);
         assertSame(fallback, ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
                 "model.weapon.bow.oakenwood", fallback));
     }
@@ -77,8 +77,8 @@ public class ArmorMaterialColorsModTest {
         Color silver = ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
                 "model.armour.torso.plate.silver", fallback);
 
-        assertColor(gold, 0.7f, 0.7f, 0.7f);
-        assertColor(silver, 0.7f, 0.7f, 0.7f);
+        assertColor(gold, 1.45f, 1.10f, 0.12f);
+        assertColor(silver, 1.65f, 1.70f, 1.72f);
         assertEquals(ArmorMaterialColorsMod.REFLECTIVE_ITEM_MARKER,
                 gold.a, EPSILON);
         assertEquals(ArmorMaterialColorsMod.REFLECTIVE_ARMOR_MARKER,
@@ -92,6 +92,8 @@ public class ArmorMaterialColorsModTest {
     @Test
     public void reflectionStrengthIsConfigurableAndClamped() {
         try {
+            new ArmorMaterialColorsMod().configure(new Properties());
+            assertEquals(0.30f, ArmorMaterialColorsMod.reflectionStrength(), EPSILON);
             Properties settings = new Properties();
             settings.setProperty("reflectionStrength", "1.5");
             new ArmorMaterialColorsMod().configure(settings);
@@ -124,10 +126,12 @@ public class ArmorMaterialColorsModTest {
 
         assertSetting(settings, "reflectionStrength",
                 ReflectionTuning.DEFAULT_REFLECTION_STRENGTH);
+        assertSetting(settings, "reflectionStrength", 0.30f);
         assertSetting(settings, "sunGlintStrength",
                 ReflectionTuning.DEFAULT_SUN_GLINT_STRENGTH);
         assertSetting(settings, "localGlintStrength",
                 ReflectionTuning.DEFAULT_LOCAL_GLINT_STRENGTH);
+        assertSetting(settings, "caveLocalReflectionBoost", 2.50f);
         assertSetting(settings, "glintSharpness",
                 ReflectionTuning.DEFAULT_GLINT_SHARPNESS);
         assertSetting(settings, "reflectionTint",
@@ -157,10 +161,32 @@ public class ArmorMaterialColorsModTest {
     }
 
     @Test
-    public void usesVanillaMetalRgbValues() {
+    public void caveCompensationTracksLayerAndClampsConfiguration() {
+        try {
+            ReflectionTuning.configure(new Properties());
+            assertEquals(2.50f, ReflectionTuning.caveLocalReflectionBoost(), EPSILON);
+            ReflectionTuning.updatePlayerLayer(-1);
+            assertEquals(true, ReflectionTuning.isInCave());
+            ReflectionTuning.updatePlayerLayer(0);
+            assertEquals(false, ReflectionTuning.isInCave());
+            Properties settings = new Properties();
+            settings.setProperty("caveLocalReflectionBoost", "9.0");
+            ReflectionTuning.configure(settings);
+            assertEquals(4.0f, ReflectionTuning.caveLocalReflectionBoost(), EPSILON);
+            settings.setProperty("caveLocalReflectionBoost", "-1.0");
+            ReflectionTuning.configure(settings);
+            assertEquals(0.0f, ReflectionTuning.caveLocalReflectionBoost(), EPSILON);
+            assertEquals(0.30f, ReflectionTuning.reflectionStrength(), EPSILON);
+        } finally {
+            ArmorMaterialColorsMod.resetSettingsForTests();
+        }
+    }
+
+    @Test
+    public void usesTheReferencePaletteOnWornArmor() {
         Color gold = ArmorMaterialColorsMod.materialColorForModel(
                 "model.armour.torso.plate.gold");
-        assertColor(gold, 0.968f, 0.721f, 0.208f);
+        assertColor(gold, 1.45f, 1.10f, 0.12f);
         assertEquals(ArmorMaterialColorsMod.REFLECTIVE_ARMOR_MARKER,
                 gold.a, EPSILON);
 
@@ -172,7 +198,7 @@ public class ArmorMaterialColorsModTest {
         assertColor(
                 ArmorMaterialColorsMod.materialColorForModel(
                         "model.armour.torso.chain.copper"),
-                0.720f, 0.450f, 0.218f);
+                1.30f, 0.37f, 0.16f);
         assertColor(
                 ArmorMaterialColorsMod.materialColorForModel(
                         "model.armour.leg.plate.adamantine"),
@@ -208,9 +234,9 @@ public class ArmorMaterialColorsModTest {
                         equipped, new Color(rgb[0], rgb[1], rgb[2]));
                 assertEquals(equipped, ArmorMaterialColorsMod.REFLECTIVE_ITEM_MARKER,
                         color.a, EPSILON);
-                // Equipment brightening preserves the stock hue ratios.
-                assertEquals(rgb[0] / rgb[2], color.r / color.b, EPSILON);
-                assertEquals(rgb[1] / rgb[2], color.g / color.b, EPSILON);
+                // The fallback is encoded for the stock world shader once.
+                assertEquals((float) Math.pow(rgb[0] / rgb[2], 1.0 / 2.2), color.r / color.b, EPSILON);
+                assertEquals((float) Math.pow(rgb[1] / rgb[2], 1.0 / 2.2), color.g / color.b, EPSILON);
                 assertEquals(material, ArmorMaterialColorsMod.reflectiveMaterialForModel(equipped));
             }
         }
@@ -241,9 +267,9 @@ public class ArmorMaterialColorsModTest {
     }
 
     private static void assertColor(Color color, float r, float g, float b) {
-        assertEquals(r, color.r, EPSILON);
-        assertEquals(g, color.g, EPSILON);
-        assertEquals(b, color.b, EPSILON);
+        assertEquals((float) Math.pow(r, 1.0 / 2.2), color.r, EPSILON);
+        assertEquals((float) Math.pow(g, 1.0 / 2.2), color.g, EPSILON);
+        assertEquals((float) Math.pow(b, 1.0 / 2.2), color.b, EPSILON);
     }
 
     private static void assertSetting(Properties settings, String name,

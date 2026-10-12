@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.armormaterialcolors'
-version = '0.3.23'
+version = '0.3.28'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -77,6 +77,7 @@ task verifyMaterialOpacityGpu(type: JavaExec, dependsOn: testClasses) {
 
 jar {
     archiveFileName = "armor-material-colors-${project.version}.jar"
+    from('LICENSE') { into 'META-INF' }
 }
 
 def generatedReflectionResources = file(
@@ -120,11 +121,15 @@ task verifyArtifact(dependsOn: [jar, resourcePack]) {
         def contents = zipTree(jar.archiveFile.get().asFile)
         [
                 'org/armormaterialcolors/client/ArmorMaterialColorsMod.class',
+                'org/armormaterialcolors/client/MetalPalette.class',
                 'org/armormaterialcolors/client/ReflectionResources.class',
                 'org/armormaterialcolors/client/ReflectionTuning.class',
                 'org/armormaterialcolors/client/PlayerArmorReflection.class',
                 'org/armormaterialcolors/client/WorldArmorMasks.class',
-                'org/armormaterialcolors/client/MaterialColorOpacity.class'
+                'org/armormaterialcolors/client/WorldEquipmentMasks.class',
+                'org/armormaterialcolors/client/WornArmorTextures.class',
+                'org/armormaterialcolors/client/MaterialColorOpacity.class',
+                'META-INF/LICENSE'
         ]
                 .each { requiredClass ->
                     if (contents.matching { include requiredClass }.files.empty) {
@@ -183,22 +188,7 @@ task verifyArtifact(dependsOn: [jar, resourcePack]) {
     }
 }
 
-task generateReadmeText {
-    inputs.file 'README.md'
-    outputs.file 'README.txt'
-    doLast {
-        def lines = file('README.md').readLines('UTF-8').findAll {
-            !(it ==~ /\s*!\[.*\]\(.*\)\s*/) && !it.startsWith('```')
-        }.collect { line ->
-            line.replaceFirst(/^#{1,6}\s+/, '')
-                    .replaceAll(/\[([^\]]+)\]\(([^)]+)\)/, '$1 ($2)')
-                    .replace('**', '').replace('`', '')
-        }
-        file('README.txt').setText(lines.join('\n').replaceAll(/\n{3,}/, '\n\n') + '\n', 'UTF-8')
-    }
-}
-
-task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack, generateReadmeText]) {
+task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack]) {
     archiveFileName = "armor-material-colors-${project.version}.zip"
     destinationDirectory = file("${buildDir}/distributions")
 
@@ -206,7 +196,6 @@ task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack, generateRea
         from jar
         from resourcePack
         from 'README.txt'
-        from 'LICENSE'
     }
     into('mods') {
         from 'mods/armor-material-colors.properties'
@@ -216,7 +205,6 @@ task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack, generateRea
             "mods/armor-material-colors/armor-material-colors-${project.version}.jar",
             "mods/armor-material-colors/armor-material-colors-resources-${project.version}.jar",
             'mods/armor-material-colors/README.txt',
-            'mods/armor-material-colors/LICENSE',
             'mods/armor-material-colors.properties'
         ].collect { it.toString() }.toSet()
         new java.util.zip.ZipFile(archiveFile.get().asFile).withCloseable { zip ->

@@ -28,13 +28,13 @@ import java.util.logging.Logger;
 public final class ArmorMaterialColorsMod
         implements WurmClientMod, Configurable, PreInitable, Initable,
         ModListener {
-    public static final String VERSION = "0.3.23";
-    static final float DEFAULT_REFLECTION_STRENGTH = 0.80f;
+    public static final String VERSION = "0.3.28";
+    static final float DEFAULT_REFLECTION_STRENGTH = ReflectionTuning.DEFAULT_REFLECTION_STRENGTH;
     static final float REFLECTIVE_ITEM_MARKER = -1.0f;
     static final float REFLECTIVE_ARMOR_MARKER = -2.0f;
 
     private static volatile String resourcePack =
-            "mods/armor-material-colors/armor-material-colors-resources-0.3.23.jar";
+            "mods/armor-material-colors/armor-material-colors-resources-0.3.28.jar";
 
     private static final Logger LOG = Logger.getLogger("ArmorMaterialColors");
 
@@ -93,7 +93,9 @@ public final class ArmorMaterialColorsMod
                         CtClass.booleanType
                 }).insertAfter(
                 "{ org.armormaterialcolors.client.WorldArmorMasks"
-                        + ".attachMask($1, $2); }");
+                        + ".attachMask($1, $2);"
+                        + " org.armormaterialcolors.client.WorldEquipmentMasks"
+                        + ".attachMasks($1, $2); }");
 
         CtClass colladaModelData = pool.getCtClass(
                 "com.wurmonline.client.renderer.model.collada.AbstractColladaModelData");
@@ -123,6 +125,11 @@ public final class ArmorMaterialColorsMod
                 "org.armormaterialcolors.client.ReflectionResources"
                         + ".ensurePackLoaded();");
 
+        pool.getCtClass("com.wurmonline.client.renderer.model.collada.material.ColladaMaterial")
+                .getDeclaredMethod("processOverrides", new CtClass[]{resourceUrlType})
+                .insertAfter("{ org.armormaterialcolors.client.WornArmorTextures"
+                        + ".neutralizeWorldTexture($0, $1); }");
+
         CtClass program = pool.getCtClass(
                 "com.wurmonline.client.renderer.shaders.Program");
         program.getDeclaredMethod(
@@ -134,6 +141,11 @@ public final class ArmorMaterialColorsMod
         program.getDeclaredMethod("bind").insertAfter(
                 "org.armormaterialcolors.client.ReflectionTuning"
                         + ".applyToBoundProgram($0);");
+
+        pool.getCtClass("com.wurmonline.client.renderer.DeferredRenderer")
+                .getDeclaredMethod("prepareLightingPass").insertBefore(
+                        "org.armormaterialcolors.client.ReflectionTuning"
+                                + ".updatePlayerLayer(world.getPlayerLayer());");
 
         // Forward rendering (including paperdolls and some world passes) uses
         // stock masked shaders. Their material alpha is opacity, so -1/-2
@@ -163,6 +175,9 @@ public final class ArmorMaterialColorsMod
                         colorType
                 });
 
+        addToTextureList.insertBefore(
+                "{ $3 = org.armormaterialcolors.client.WornArmorTextures"
+                        + ".neutralTexture($1, $3); }");
         addToTextureList.insertAfter(
                 "{ org.armormaterialcolors.client.ArmorMaterialColorsMod"
                         + ".applyMaterialColor($1, $2, $3, $5); }");
@@ -174,6 +189,10 @@ public final class ArmorMaterialColorsMod
                 "com.wurmonline.client.resources.textures.Texture");
         CtClass playerTextureBuilder = pool.getCtClass(
                 "com.wurmonline.client.resources.textures.PlayerTextureBuilderGL");
+        installWornMaskPathHook(pool.getCtClass(
+                "com.wurmonline.client.renderer.cell.PlayerTexture")
+                .getDeclaredMethod("loadPlayerBody"));
+        installWornMaskPathHook(playerTextureBuilder.getDeclaredMethod("generateTexture"));
 
         // Stock passes wantedAlpha=false to Offscreen.init, so its player
         // atlas is RGB8 and silently discards our alpha-only material mask.
@@ -227,62 +246,37 @@ public final class ArmorMaterialColorsMod
         });
     }
 
-    /**
-     * Makes the stock material filters visible on weapons and tools. Wurm's
-     * shader multiplies a dark grey diffuse texture by the values from
-     * itemcolors.xml. Normalising the strongest channel to 1 keeps the stock
-     * hue and channel ratios while avoiding an unnecessary overall darkening.
-     */
+    static void installWornMaskPathHook(CtMethod method) throws CannotCompileException {
+        method.instrument(new ExprEditor() {
+            @Override
+            public void edit(MethodCall call) throws CannotCompileException {
+                if ("java.lang.String".equals(call.getClassName())
+                        && "replace".equals(call.getMethodName())) {
+                    call.replace("{ $_ = org.armormaterialcolors.client.WornArmorTextures"
+                            + ".maskTexturePath($proceed($$)); }");
+                }
+            }
+        });
+    }
+
+    /** Supplies the same reference palette for held, worn and dropped items. */
     public static Color enhanceEquipmentMaterialColor(
             String modelName, Color vanillaColor) {
-        if (vanillaColor == null) {
-            return vanillaColor;
-        }
-
         String material = materialForSupportedEquipment(modelName);
-        String reflectiveMaterial = reflectiveMaterialForModel(modelName);
-        if (material == null && reflectiveMaterial == null) {
+        if (material == null) {
             return vanillaColor;
         }
-
-        float red = vanillaColor.r;
-        float green = vanillaColor.g;
-        float blue = vanillaColor.b;
-        if (material != null) {
-            float strongest = Math.max(red, Math.max(green, blue));
-            if (strongest > 0.0f) {
-                red = clamp01(red / strongest);
-                green = clamp01(green / strongest);
-                blue = clamp01(blue / strongest);
-            }
+        float alpha = vanillaColor == null || vanillaColor.a < 0.0f ? 1.0f : vanillaColor.a;
+        if (MetalPalette.isReflective(material)) {
+            alpha = materialForSupportedArmor(modelName) != null
+                    ? REFLECTIVE_ARMOR_MARKER : REFLECTIVE_ITEM_MARKER;
         }
-
-        boolean reflectiveArmor = reflectiveMaterial != null
-                && materialForSupportedArmor(modelName) != null;
-        Color enhanced = new Color(
-                red,
-                green,
-                blue,
-                reflectiveMaterial == null
-                        ? vanillaColor.a
-                        : reflectiveArmor
-                                ? REFLECTIVE_ARMOR_MARKER
-                                : REFLECTIVE_ITEM_MARKER);
-        return enhanced;
+        return MetalPalette.color(material, alpha);
     }
 
     static String reflectiveMaterialForModel(String modelName) {
-        if (modelName == null) {
-            return null;
-        }
-
-        String[] tokens = modelName.toLowerCase(Locale.ROOT).split("\\.");
-        for (int index = tokens.length - 1; index >= 0; index--) {
-            if (isReflectiveMetal(tokens[index])) {
-                return tokens[index];
-            }
-        }
-        return null;
+        String material = materialForSupportedEquipment(modelName);
+        return MetalPalette.isReflective(material) ? material : null;
     }
 
     static String materialForSupportedEquipment(String modelName) {
@@ -291,22 +285,24 @@ public final class ArmorMaterialColorsMod
         }
 
         String normalized = modelName.toLowerCase(Locale.ROOT);
-        if (!normalized.startsWith("model.weapon.")
-                && !normalized.startsWith("model.tool.")) {
+        if (!normalized.startsWith("model.")
+                || normalized.startsWith("model.creature.")
+                || normalized.startsWith("model.corpse.")) {
             return null;
         }
 
         String[] tokens = normalized.split("\\.");
         for (int index = tokens.length - 1; index >= 0; index--) {
-            if (isTintedMetal(tokens[index])) {
+            if (MetalPalette.isMetal(tokens[index])) {
                 return tokens[index];
+            }
+            // A later wood suffix is the actual material, even if the base
+            // item's name happens to contain a metal word.
+            if (tokens[index].endsWith("wood")) {
+                return null;
             }
         }
         return null;
-    }
-
-    private static float clamp01(float value) {
-        return Math.max(0.0f, Math.min(1.0f, value));
     }
 
     static float reflectionStrength() {
@@ -320,7 +316,7 @@ public final class ArmorMaterialColorsMod
     static void resetSettingsForTests() {
         ReflectionTuning.resetDefaults();
         resourcePack =
-                "mods/armor-material-colors/armor-material-colors-resources-0.3.23.jar";
+                "mods/armor-material-colors/armor-material-colors-resources-0.3.27.jar";
     }
 
     /**
@@ -354,61 +350,8 @@ public final class ArmorMaterialColorsMod
             return null;
         }
 
-        // These are the stock values from graphics.jar/xmls/itemcolors.xml.
-        if ("brass".equals(material)) {
-            return armorColor(0.823f, 0.690f, 0.553f, material);
-        }
-        if ("bronze".equals(material)) {
-            return armorColor(0.588f, 0.384f, 0.215f, material);
-        }
-        if ("copper".equals(material)) {
-            return armorColor(0.720f, 0.450f, 0.218f, material);
-        }
-        if ("gold".equals(material)) {
-            return armorColor(0.968f, 0.721f, 0.208f, material);
-        }
-        if ("lead".equals(material)) {
-            return armorColor(0.510f, 0.540f, 0.590f, material);
-        }
-        if ("silver".equals(material)) {
-            return armorColor(0.680f, 0.756f, 0.776f, material);
-        }
-        if ("steel".equals(material)) {
-            return armorColor(0.570f, 0.600f, 0.650f, material);
-        }
-        if ("seryll".equals(material)) {
-            return armorColor(0.650f, 0.170f, 0.060f, material);
-        }
-        if ("tin".equals(material)) {
-            return armorColor(0.680f, 0.660f, 0.600f, material);
-        }
-        if ("zinc".equals(material)) {
-            return armorColor(0.910f, 0.870f, 0.770f, material);
-        }
-        if ("glimmersteel".equals(material)) {
-            return armorColor(0.860f, 0.820f, 0.590f, material);
-        }
-        if ("adamantine".equals(material)) {
-            return armorColor(0.550f, 0.670f, 0.860f, material);
-        }
-        if ("electrum".equals(material)) {
-            return armorColor(0.886f, 0.862f, 0.425f, material);
-        }
-
-        // Iron deliberately has no multiplier in vanilla. Its dedicated/base
-        // grey texture must be used without an extra tint.
-        return null;
-    }
-
-    private static Color armorColor(
-            float red, float green, float blue, String material) {
-        // The negative alpha is metadata, never opacity. The replacement
-        // player compositor shader preserves the source texture's alpha;
-        // PlayerArmorReflection consumes this flag to add the baked mask.
-        float marker = isReflectiveMetal(material)
-                ? REFLECTIVE_ARMOR_MARKER
-                : 1.0f;
-        return new Color(red, green, blue, marker);
+        return MetalPalette.color(material, MetalPalette.isReflective(material)
+                ? REFLECTIVE_ARMOR_MARKER : 1.0f);
     }
 
     static String materialForSupportedArmor(String modelName) {
@@ -417,6 +360,18 @@ public final class ArmorMaterialColorsMod
         }
 
         String normalized = modelName.toLowerCase(Locale.ROOT);
+        if (normalized.startsWith("model.pile.")) {
+            String[] parts = normalized.split("\\.");
+            if (parts.length > 2 && ("platejacket".equals(parts[2])
+                    || "platepants".equals(parts[2]) || "plateboot".equals(parts[2])
+                    || "platesleeve".equals(parts[2]) || "plategauntlet".equals(parts[2])
+                    || "chainjacket".equals(parts[2]) || "chainpants".equals(parts[2])
+                    || "chainboot".equals(parts[2]) || "chainsleeve".equals(parts[2])
+                    || "chaingauntlet".equals(parts[2]) || "chaincoif".equals(parts[2]))) {
+                return materialForSupportedEquipment(modelName);
+            }
+            return null;
+        }
         if (!normalized.contains(".armour.")) {
             return null;
         }
@@ -429,13 +384,7 @@ public final class ArmorMaterialColorsMod
             return null;
         }
 
-        String[] suffixTokens = normalized.substring(armorTypeEnd).split("\\.");
-        for (String token : suffixTokens) {
-            if (isTintedMetal(token)) {
-                return token;
-            }
-        }
-        return null;
+        return materialForSupportedEquipment(modelName);
     }
 
     private static int tokenEnd(String modelName, String armorToken) {
@@ -446,29 +395,6 @@ public final class ArmorMaterialColorsMod
 
         int end = start + armorToken.length();
         return end == modelName.length() || modelName.charAt(end) == '.' ? end : -1;
-    }
-
-    private static boolean isReflectiveMetal(String material) {
-        return "gold".equals(material)
-                || "silver".equals(material)
-                || "seryll".equals(material)
-                || "adamantine".equals(material);
-    }
-
-    private static boolean isTintedMetal(String material) {
-        return "brass".equals(material)
-                || "bronze".equals(material)
-                || "copper".equals(material)
-                || "gold".equals(material)
-                || "lead".equals(material)
-                || "silver".equals(material)
-                || "steel".equals(material)
-                || "seryll".equals(material)
-                || "tin".equals(material)
-                || "zinc".equals(material)
-                || "glimmersteel".equals(material)
-                || "adamantine".equals(material)
-                || "electrum".equals(material);
     }
 
     @Override

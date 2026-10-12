@@ -340,13 +340,13 @@ void main()
                 metalTint,
                 armorReflectionTuning1.x);
 
-        // reflectionStrength defaults to 0.80 for Gold/Silver pixels.
+        // reflectionStrength defaults to 0.30 for premium-metal pixels.
         finalColor = mix(
                 finalColor,
                 reflectedColor,
                 clamp(reflectionStrength, 0.0, 1.0));
 
-        // Restore a controlled light-source glint after the 80% reflection
+        // Restore a controlled light-source glint after the reflection
         // blend. Without this, the stock specular highlight is mostly mixed
         // away and polished metal looks flat. Keep sunlight out of caves;
         // local cave lights are handled by the point-light pass.

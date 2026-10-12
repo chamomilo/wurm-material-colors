@@ -21,7 +21,7 @@ public final class MaterialOpacityGpuProbe {
             + "_worldpos=vec4(0,0,0,1); _shadowmapcoord=vec4(0,0,0,1);"
             + "_fog=vec4(0,0,0,1); _color=vec4(1); _normal=vec3(0,0,1);"
             + "_eyedir=vec3(0,0,1); _lightvec[0]=vec4(0,0,1,1); }";
-    private static final String[] METALS = {"gold", "silver", "seryll", "adamantine"};
+    private static final String[] METALS = MetalPaletteTest.METALS;
     private static final String MODERN_VERTEX = "#version 330 compatibility\n"
             + "out vec2 _texcoord; out vec3 _normal, _viewpos, _worldpos; out vec4 _color;"
             + "\n#ifdef USE_INSTANCING\n"
@@ -77,7 +77,7 @@ public final class MaterialOpacityGpuProbe {
                             int[] fixedMetal = render(program, safe);
                             int[] stockOpaque = render(program,
                                     new Color(marked.r, marked.g, marked.b, 1.0f));
-                            require(oldMetal[3] == 0, "old bug did not reproduce: " + name);
+                            if (marked.a < 0) require(oldMetal[3] == 0, "old bug did not reproduce: " + name);
                             require(java.util.Arrays.equals(fixedMetal, stockOpaque),
                                     "stock metal opacity changed: " + name);
                             if (diffuseAlpha == 0) require(fixedMetal[3] == 0, "cutout filled");
@@ -90,14 +90,27 @@ public final class MaterialOpacityGpuProbe {
                             checks += 3;
                         }
                     }
+                    texture(2, 0,255,0,255);
+                    Color safe = MaterialColorOpacity.forReflectionSupport(materialColor("model.tool.shovel.", metal), false);
+                    for (int base : new int[]{32,100,180}) {
+                        texture(0, base,base,base,255);
+                        int[] pixel = render(program, safe);
+                        for (int channel=0;channel<3;channel++) {
+                            require(Math.abs(pixel[channel] - MetalPaletteTest.expectedMaterialPixel(metal, channel, base)) <= 1,
+                                    "icon colour-space mismatch " + name + " " + metal + " base=" + base + " channel=" + channel);
+                            checks++;
+                        }
+                    }
                 }
-                System.out.println("PASS " + name + ": negative alpha reproduces invisible metal;"
-                        + " fixed metal retains stock opacity, RGB and cutouts; handles unchanged");
+                System.out.println("PASS " + name + ": 14 metal palettes, opaque equipment,"
+                        + " transparent cutouts and unchanged handles");
                 GL20.glUseProgram(0);
                 GL20.glDeleteProgram(program);
             }
             System.out.println("MATERIAL_OPACITY_GPU_OK checks=" + checks);
             verifyModernMasks();
+            verifyWornCompositor();
+            CaveLightingGpuProbe.verify();
         } finally {
             context.destroy();
         }
@@ -153,16 +166,24 @@ public final class MaterialOpacityGpuProbe {
                         Color deferred = MaterialColorOpacity.forReflectionSupport(marked, true);
                         boolean armor = model.contains(".armour.");
                         String label = metal + " " + model + " instanced=" + instanced;
-                        uniform4f(program, "armorReflectionTuning0", 0.8f, 0.28f, 0.32f, 0.45f);
+                        boolean reflective = metal.equals("gold") || metal.equals("silver")
+                                || metal.equals("adamantine") || metal.equals("seryll")
+                                || metal.equals("glimmersteel");
+                        require(reflective == (marked.a < 0), "reflection eligibility " + label);
+                        checks++;
+                        uniform4f(program, "armorReflectionTuning0",
+                                ReflectionTuning.DEFAULT_REFLECTION_STRENGTH, 0.28f, 0.32f, 0.45f);
                         texture(0, 180, 180, 180, 255);
                         texture(2, 0, 255, 0, 255);
                         float[][] colored = renderModern(program, deferred);
                         for (int channel = 0; channel < 3; channel++) {
                             float tint = new float[]{marked.r, marked.g, marked.b}[channel];
-                            close(180f / 255f * tint, colored[0][channel], "stock hue " + label);
+                            close(180f / 255f * tint, colored[0][channel], "reference palette " + label);
                         }
-                        close(armor ? -2.8f : -0.8f, colored[2][2], "reflection profile " + label);
-                        close(armor ? 0.38f : 0.9f, colored[2][1], "surface roughness " + label);
+                        close(reflective ? (armor ? -2.3f : -0.3f) : 0,
+                                colored[2][2], "premium-only reflection profile " + label);
+                        close(reflective && armor ? 0.38f : 0.9f,
+                                colored[2][1], "surface roughness " + label);
                         require(colored[0][3] >= 1, "Metal became transparent: " + label);
                         checks += 6;
                         texture(2, 0, 0, 0, 255);
@@ -185,7 +206,7 @@ public final class MaterialOpacityGpuProbe {
                 GL20.glUseProgram(0);
                 GL20.glDeleteProgram(program);
                 System.out.println("PASS modern mask shader instanced=" + instanced
-                        + ": four stock metal hues, armor/item reflections, handles and cutouts");
+                        + ": 14 reference palettes, only five reflective metals, handles and cutouts");
             }
         } finally {
             GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
@@ -193,6 +214,39 @@ public final class MaterialOpacityGpuProbe {
             GL30.glDeleteFramebuffers(framebuffer);
         }
         System.out.println("MATERIAL_REFLECTION_GPU_OK checks=" + checks);
+    }
+
+    private static void verifyWornCompositor() throws Exception {
+        File project = new File(System.getProperty("armorMaterialColorsProjectDir"));
+        String fragment = new String(Files.readAllBytes(new File(project,
+                "resource-pack/" + ROOT + "masked_nolight.fragment.shader").toPath()), StandardCharsets.UTF_8);
+        int program = link(VERTEX, "#version 120\n" + fragment);
+        GL20.glUseProgram(program);
+        uniform1i(program, "tex0", 0);
+        uniform1i(program, "tex2", 2);
+        uniform4f(program, "secondarycolor", 1, 1, 1, 1);
+        int checks = 0;
+        for (String metal : METALS) {
+            Color color = ArmorMaterialColorsMod.materialColorForModel("model.armour.torso.plate." + metal);
+            for (int alpha : new int[]{0, 128, 255}) {
+                texture(0, 100, 100, 100, alpha);
+                texture(2, 0, 255, 0, 255);
+                int[] pixel = render(program, color);
+                for (int channel = 0; channel < 3; channel++) {
+                    require(Math.abs(pixel[channel] - MetalPaletteTest.expectedMaterialPixel(metal, channel, 100)) <= 1,
+                            "worn reference palette " + metal + " channel=" + channel);
+                }
+                require(pixel[3] == alpha, "worn texture alpha changed: " + metal);
+                texture(2, 0, 0, 0, 255);
+                int[] leather = render(program, color);
+                require(java.util.Arrays.equals(leather, new int[]{100, 100, 100, alpha}),
+                        "worn unmasked leather recolored: " + metal);
+                checks += 5;
+            }
+        }
+        GL20.glUseProgram(0);
+        GL20.glDeleteProgram(program);
+        System.out.println("MATERIAL_WORN_COMPOSITOR_GPU_OK metals=14 checks=" + checks);
     }
 
     private static float[][] renderModern(int program, Color color) {
@@ -243,7 +297,7 @@ public final class MaterialOpacityGpuProbe {
                 GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,pixel);
     }
 
-    private static int link(String vertex, String fragment) {
+    static int link(String vertex, String fragment) {
         int program = GL20.glCreateProgram();
         int vs = shader(GL20.GL_VERTEX_SHADER,vertex);
         int fs = shader(GL20.GL_FRAGMENT_SHADER,fragment);
@@ -263,11 +317,11 @@ public final class MaterialOpacityGpuProbe {
         return shader;
     }
 
-    private static void uniform1i(int program, String name, int value) {
+    static void uniform1i(int program, String name, int value) {
         GL20.glUniform1i(GL20.glGetUniformLocation(program,name),value);
     }
 
-    private static void uniform4f(int program, String name, float x, float y, float z, float w) {
+    static void uniform4f(int program, String name, float x, float y, float z, float w) {
         GL20.glUniform4f(GL20.glGetUniformLocation(program,name),x,y,z,w);
     }
 

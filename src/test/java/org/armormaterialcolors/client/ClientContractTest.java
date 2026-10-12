@@ -82,6 +82,8 @@ public class ClientContractTest {
         assertTrue(pool.get(
                 "com.wurmonline.client.resources.textures.PlayerTextureBuilderGL")
                 .toBytecode().length > 0);
+        assertTrue(pool.get("com.wurmonline.client.renderer.cell.PlayerTexture")
+                .toBytecode().length > 0);
         assertTrue(pool.get(
                 "com.wurmonline.client.renderer.ItemColorsXml")
                 .toBytecode().length > 0);
@@ -97,8 +99,13 @@ public class ClientContractTest {
         assertTrue(pool.get(
                 "com.wurmonline.client.renderer.shaders.Program")
                 .toBytecode().length > 0);
+        assertTrue(pool.get("com.wurmonline.client.renderer.DeferredRenderer")
+                .toBytecode().length > 0);
         assertTrue(pool.get(
                 "com.wurmonline.client.renderer.shaders.ProgramBindings")
+                .toBytecode().length > 0);
+        assertTrue(pool.get(
+                "com.wurmonline.client.renderer.model.collada.material.ColladaMaterial")
                 .toBytecode().length > 0);
     }
 

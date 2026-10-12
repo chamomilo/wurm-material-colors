@@ -14,9 +14,10 @@ import java.util.logging.Logger;
 
 /** Configured values supplied to the bound reflection shaders. */
 public final class ReflectionTuning {
-    public static final float DEFAULT_REFLECTION_STRENGTH = 0.80f;
+    public static final float DEFAULT_REFLECTION_STRENGTH = 0.30f;
     public static final float DEFAULT_SUN_GLINT_STRENGTH = 0.28f;
     public static final float DEFAULT_LOCAL_GLINT_STRENGTH = 0.32f;
+    public static final float DEFAULT_CAVE_LOCAL_REFLECTION_BOOST = 2.50f;
     public static final float DEFAULT_GLINT_SHARPNESS = 0.45f;
     public static final float DEFAULT_REFLECTION_TINT = 0.72f;
     public static final float DEFAULT_FRONT_REFLECTION_DETAIL = 0.00f;
@@ -42,6 +43,9 @@ public final class ReflectionTuning {
             DEFAULT_SUN_GLINT_STRENGTH;
     private static volatile float localGlintStrength =
             DEFAULT_LOCAL_GLINT_STRENGTH;
+    private static volatile float caveLocalReflectionBoost =
+            DEFAULT_CAVE_LOCAL_REFLECTION_BOOST;
+    private static volatile boolean inCave;
     private static volatile float glintSharpness =
             DEFAULT_GLINT_SHARPNESS;
     private static volatile float reflectionTint = DEFAULT_REFLECTION_TINT;
@@ -70,6 +74,8 @@ public final class ReflectionTuning {
                 DEFAULT_SUN_GLINT_STRENGTH, 0.0f, 1.0f);
         localGlintStrength = number(properties, "localGlintStrength",
                 DEFAULT_LOCAL_GLINT_STRENGTH, 0.0f, 1.0f);
+        caveLocalReflectionBoost = number(properties, "caveLocalReflectionBoost",
+                DEFAULT_CAVE_LOCAL_REFLECTION_BOOST, 0.0f, 4.0f);
         glintSharpness = number(properties, "glintSharpness",
                 DEFAULT_GLINT_SHARPNESS, 0.0f, 1.0f);
         reflectionTint = number(properties, "reflectionTint",
@@ -103,6 +109,8 @@ public final class ReflectionTuning {
         reflectionStrength = DEFAULT_REFLECTION_STRENGTH;
         sunGlintStrength = DEFAULT_SUN_GLINT_STRENGTH;
         localGlintStrength = DEFAULT_LOCAL_GLINT_STRENGTH;
+        caveLocalReflectionBoost = DEFAULT_CAVE_LOCAL_REFLECTION_BOOST;
+        inCave = false;
         glintSharpness = DEFAULT_GLINT_SHARPNESS;
         reflectionTint = DEFAULT_REFLECTION_TINT;
         frontReflectionDetail = DEFAULT_FRONT_REFLECTION_DETAIL;
@@ -121,6 +129,23 @@ public final class ReflectionTuning {
 
     public static float reflectionStrength() {
         return reflectionStrength;
+    }
+
+    /** Updated before each world lighting pass, including cave entrance/exit. */
+    public static void updatePlayerLayer(int layer) {
+        boolean cave = layer < 0;
+        if (inCave != cave) {
+            inCave = cave;
+            changed();
+        }
+    }
+
+    static float caveLocalReflectionBoost() {
+        return caveLocalReflectionBoost;
+    }
+
+    static boolean isInCave() {
+        return inCave;
     }
 
     /** Called immediately after Wurm binds any GLSL program. */
@@ -150,6 +175,8 @@ public final class ReflectionTuning {
                 ssrRayDistance,
                 ssrThickness,
                 backdropContrast);
+        set(program, "armorReflectionTuning4",
+                caveLocalReflectionBoost, inCave ? 1.0f : 0.0f, 0.0f, 0.0f);
         APPLIED.put(program.getId(), revision);
     }
 

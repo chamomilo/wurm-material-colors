@@ -6,23 +6,28 @@ import com.wurmonline.client.renderer.model.collada.importer.ColladaModel;
 import com.wurmonline.client.renderer.model.collada.importer.TriangleMesh;
 import com.wurmonline.client.renderer.model.collada.material.ColladaMaterial;
 import com.wurmonline.client.resources.ResourceUrl;
+import org.gotti.wurmunlimited.modloader.classhooks.HookManager;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** Restores reviewed wood regions on stock and audited replacement models. */
 public final class WorldWoodMasks {
     private static final String MARKER_PREFIX = "material_colors_wood_";
+    private static final Logger LOG = Logger.getLogger("ArmorMaterialColors");
     private static final Map<String, String> RULES = readRules();
     private static final Map<String, ResourceUrl> RESOLVED = new ConcurrentHashMap<String, ResourceUrl>();
-    private static final Logger LOG = Logger.getLogger("ArmorMaterialColors");
     private WorldWoodMasks() { }
 
     public static void attachMasks(ColladaModel model, ResourceUrl url) {
@@ -98,9 +103,9 @@ public final class WorldWoodMasks {
 
     private static Map<String, String> readRules() {
         Map<String, String> result = new HashMap<String, String>();
-        InputStream source = WorldWoodMasks.class.getResourceAsStream("wood-model-masks.tsv");
-        if (source == null) throw new IllegalStateException("Missing wood model mask rules");
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(source, StandardCharsets.UTF_8))) {
+        try (InputStream source = openRules()) {
+            if (source == null) throw new IOException("Missing wood model mask rules");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(source, StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("#") || line.trim().isEmpty()) continue;
@@ -111,8 +116,25 @@ public final class WorldWoodMasks {
                 result.put(fields[0], fields[1]);
             }
         } catch (Exception error) {
-            throw new IllegalStateException("Unable to read wood mask rules", error);
+            // Optional masks must never poison this class and terminate every
+            // Collada/WOM model-loader thread if an installation is incomplete.
+            LOG.log(Level.WARNING, "Wood mask rules unavailable; keeping original model masks", error);
+            return Collections.emptyMap();
         }
         return Collections.unmodifiableMap(result);
+    }
+
+    private static InputStream openRules() throws IOException {
+        InputStream source = WorldWoodMasks.class.getResourceAsStream("wood-model-masks.tsv");
+        if (source != null) return source;
+        // Wurm loads shared mod bytecode from its ClassPool, but ordinary
+        // ClassLoader resource lookups cannot see those JARs. Resolve the table
+        // beside the actual class selected by that same pool, including renamed
+        // JARs, without searching obsolete versions left in the mods directory.
+        URL owner = HookManager.getInstance().getClassPool().find(WorldWoodMasks.class.getName());
+        if (owner == null) return null;
+        URLConnection resource = new URL(owner, "wood-model-masks.tsv").openConnection();
+        resource.setUseCaches(false);
+        return resource.getInputStream();
     }
 }

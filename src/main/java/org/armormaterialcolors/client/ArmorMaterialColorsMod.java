@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 public final class ArmorMaterialColorsMod
         implements WurmClientMod, Configurable, PreInitable, Initable,
         ModListener {
-    public static final String VERSION = "0.5.1";
+    public static final String VERSION = "0.5.3";
     static final float DEFAULT_REFLECTION_STRENGTH = ReflectionTuning.DEFAULT_REFLECTION_STRENGTH;
     static final float REFLECTIVE_ITEM_MARKER = -1.0f;
     static final float REFLECTIVE_ARMOR_MARKER = -2.0f;

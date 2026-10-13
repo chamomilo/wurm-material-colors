@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.armormaterialcolors'
-version = '0.5.1'
+version = '0.5.3'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -239,6 +239,24 @@ task dist(type: Zip, dependsOn: [test, verifyArtifact, resourcePack]) {
 }
 
 build.dependsOn verifyArtifact
+
+// Real Wurm loader, without main classes/resources on the parent classpath.
+// Each case gets a fresh JVM so a failed class initializer cannot be hidden.
+def woodLoaderChecks = ['healthy', 'missing', 'invalid'].collect { mode ->
+    tasks.create("verifyWorldWoodSharedLoader${mode.capitalize()}", JavaExec) {
+        dependsOn jar, testClasses
+        classpath = files(sourceSets.test.output.classesDirs) + files(requiredClientLibraries)
+        main = 'WorldWoodSharedLoaderProbe'
+        doFirst {
+            args = [jar.archiveFile.get().asFile.absolutePath, mode,
+                    file('src/main/resources/org/armormaterialcolors/client/wood-model-masks.tsv').absolutePath,
+                    file("${buildDir}/wood-loader-fixtures").absolutePath]
+        }
+    }
+}
+task verifyWorldWoodSharedLoader(dependsOn: woodLoaderChecks)
+build.dependsOn verifyWorldWoodSharedLoader
+dist.dependsOn verifyWorldWoodSharedLoader
 
 ext.chamomiloUpdate = [id: 'armor-material-colors', name: 'Material Colors', repo: 'chamomilo/wurm-material-colors', asset: 'armor-material-colors-{version}.zip', properties: 'mods/armor-material-colors.properties', main: 'src/main/java/org/armormaterialcolors/client/ArmorMaterialColorsMod.java']
 apply from: 'gradle/chamomilo-updater.gradle'

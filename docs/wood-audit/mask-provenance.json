@@ -1,0 +1,727 @@
+{
+  "material_colors_wood_d1e0c112748a4779.dds": {
+    "source": "Chests/chest_pm.dds",
+    "sha256": "d1e0c112748a4779a92e00fe6935891876979fe1fb3716ce5cce3f96d8ed0739",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_7e185bdd384e6b18.dds": {
+    "source": null,
+    "sha256": "7e185bdd384e6b181e173cdd82382077cff00aec88cd5d140bfde35ff8ba789b",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_993404db68608450.dds": {
+    "source": null,
+    "sha256": "993404db68608450267177737b450ad6aa5427bc425566affd9ae858af8cab1f",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_55c55b2879a89efd.dds": {
+    "source": "tools/barrel/barrels_pm.dds",
+    "sha256": "55c55b2879a89efd584cdde24a555ed183321688f97b935e23fecfe38dc0aab9",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_942de246fb603fe3.dds": {
+    "source": null,
+    "sha256": "942de246fb603fe3c8d17d85850da80a67c0bae961aeb6fb2a9b3541c80f6179",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_fcf32fd37c6ff70c.dds": {
+    "source": "cooking/Hive/gm_m.dds",
+    "sha256": "fcf32fd37c6ff70c82726f7c83a3d138482a09b04c9683a83c433c79d466eb2d",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_868f9d3f8e9f7140.dds": {
+    "source": null,
+    "sha256": "868f9d3f8e9f714037898d208a0d669965e560e0ad49c3abc255b058a43147c6",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_888f0976a4f42a80.dds": {
+    "source": "cooking/Larder/larder_pm.dds",
+    "sha256": "888f0976a4f42a80d4504f577ea8adfb2316a61064c8a2d2687ce7ed44c5b826",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_366dcf39cae73f58.dds": {
+    "source": null,
+    "sha256": "366dcf39cae73f583e4a87da94e1b1118aab11ce70343f57209d29cc11fee894",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_bb8c3b688a085d39.dds": {
+    "source": "furniture/armchair_pm.dds",
+    "sha256": "bb8c3b688a085d398fd1b214526909db75608c28d6e450eb7704426889e55793",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_03a5c71c5a8ba634.dds": {
+    "source": "furniture/CanopyBed/cb_pm.dds",
+    "sha256": "03a5c71c5a8ba634397cb658340f41a4a80929faa2523636ad93d15c629cca15",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_08a0e78eedbd41c8.dds": {
+    "source": "furniture/Chaises/royal_pm.dds",
+    "sha256": "08a0e78eedbd41c81a3e3e9328f1f4582eeb98b8df71f911c170c30686e3c630",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_442973c809a29453.dds": {
+    "source": null,
+    "sha256": "442973c809a2945329b0eeb112411bac7104621c6e56e37c09c43e172a4d8d4b",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_96a6b210215ba29b.dds": {
+    "source": "furniture/bedcloth_pm.dds",
+    "sha256": "96a6b210215ba29b71d4bcc01e6282ff89bb82ba302708c29c92039666135e84",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_bec0710ee2c03a51.dds": {
+    "source": "furniture/bed_pm.dds",
+    "sha256": "bec0710ee2c03a51406c481ad0a08e964823fd068c0f42785951f16b47e582f8",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_76355336c86c2aed.dds": {
+    "source": null,
+    "sha256": "76355336c86c2aede9ce49147cf299563f0851805941d4619b0e7e7033f8db60",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_04fccc1503e7ce06.dds": {
+    "source": null,
+    "sha256": "04fccc1503e7ce0697d0d0b4901bb342c9331d0c265290fee377b3b82287cd06",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_66bd09b2a14e3e87.dds": {
+    "source": null,
+    "sha256": "66bd09b2a14e3e879ee74bd6c9755718b299a48988f161537ac4867df8aa07b6",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_c270672541e62587.dds": {
+    "source": null,
+    "sha256": "c270672541e62587c70715a99add8f2ead1870d7200db7392be6d14cf98dc468",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_7e20168b9f7002cc.dds": {
+    "source": "models/Cages/cage_m.dds",
+    "sha256": "7e20168b9f7002cc898511fc4fcddb9a5facff433aff9a2687edb19fba0e0763",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_f7eba2b4f4755f76.dds": {
+    "source": "models/Cages/cageGeneric_m.dds",
+    "sha256": "f7eba2b4f4755f76c1d30c3dcb8c964acb9d25dd0edc723b3c7fe0e22d7b18ea",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_92c10f6b54b68283.dds": {
+    "source": null,
+    "sha256": "92c10f6b54b68283d0a0d3c36bbb162d1682f494e30e123a8a025dc1a0498645",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_18ec57c9889c5ae5.dds": {
+    "source": "models/Fishing/Items/tackleBox_mm.dds",
+    "sha256": "18ec57c9889c5ae5591676a04f99b8ea22a9b667fd0e874b851ddd7d08cad958",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_6a1d321a799ff209.dds": {
+    "source": null,
+    "sha256": "6a1d321a799ff2091c91903056d02e7f39a2c521f45eeae8b858c1f412905f45",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_622e5d6e78d2a300.dds": {
+    "source": null,
+    "sha256": "622e5d6e78d2a3000f1125a54fdbdfc743145e6a740a53e246a12f6f7c71b7a4",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_62793a150c62745a.dds": {
+    "source": null,
+    "sha256": "62793a150c62745af8b1d9c094075561af0837dd648f70e0b331086337d110ef",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_c0d2b5a73e588bd9.dds": {
+    "source": null,
+    "sha256": "c0d2b5a73e588bd9aad5c1d372650a86808a62b1f58729df2e281614345b12f3",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_e4b8deee4ede1ecd.dds": {
+    "source": null,
+    "sha256": "e4b8deee4ede1ecd1217bacc16c5cd42593a667aa0fec44b6b7aa3489ef6ba10",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_9db98c759e558c21.dds": {
+    "source": null,
+    "sha256": "9db98c759e558c21d7c39bacd29feea86b3c67fccccea4cb077bc250fa952d5a",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_b08c70dc02ed4afe.dds": {
+    "source": null,
+    "sha256": "b08c70dc02ed4afe4f73c7f246c03f23096e8d6703f4649fbc831021fbd4286b",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_5265f890486971ee.dds": {
+    "source": null,
+    "sha256": "5265f890486971ee4a3a821960d2652e814f3e2f69349cb721e21e4b6a1124c4",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_2db30775195b157a.dds": {
+    "source": null,
+    "sha256": "2db30775195b157a75b446aabb2ce805f4079582e42fcfa7930e2cd148ba2b1b",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_1e49fe80ff903226.dds": {
+    "source": null,
+    "sha256": "1e49fe80ff9032269866b7870874205094beac3b12592bc4a9079acd7e91d35d",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_d6415edaa6e0de87.dds": {
+    "source": null,
+    "sha256": "d6415edaa6e0de8711abdd613e7c0d3920afbc7a5680688c96f544dcefc3866c",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_141fe17f35a73d40.dds": {
+    "source": null,
+    "sha256": "141fe17f35a73d40ed8fb673a36099a075cb950f6174dbadf1a189345a96e26d",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_26648cab5375c1cd.dds": {
+    "source": null,
+    "sha256": "26648cab5375c1cd4589e2f00dc7df6dcd0d62baf5c4f5371c332ea6aa22e675",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_e8d60217110b4f2e.dds": {
+    "source": null,
+    "sha256": "e8d60217110b4f2ea76a2919978257fd9f0a76c5fd71127de3cfb00abe0f3729",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_1b6b5308bf29a389.dds": {
+    "source": null,
+    "sha256": "1b6b5308bf29a3891b9b386a390caefb1b124d0a6c4e1692fb57bc718fd9bdcb",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_d67be44cbd590158.dds": {
+    "source": null,
+    "sha256": "d67be44cbd5901584b82be33c5bb2e61ae718ba92abc294257b5b000d30cb539",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_7da69c7841e8e31b.dds": {
+    "source": null,
+    "sha256": "7da69c7841e8e31bef9034fadc11cffd83d54e83525dab12eef8a011d86c179f",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_b50bef6b71ea99c7.dds": {
+    "source": "models/spinningWheel/wheel_pm.dds",
+    "sha256": "b50bef6b71ea99c733f0f980c429209222023d9f4bc283217d6d1b776f799e44",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_bdd9c4b9e28068b7.dds": {
+    "source": null,
+    "sha256": "bdd9c4b9e28068b7e85afd36682b62c5eb035d6dc7a34815278fe9a2baa7484c",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_7731e4ef051a7c88.dds": {
+    "source": null,
+    "sha256": "7731e4ef051a7c888ad2289e3e9c0262e27d06ef446cfd2270e8e81a8234fb33",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_fc781d6a8338266c.dds": {
+    "source": null,
+    "sha256": "fc781d6a8338266c1f131164e850f19ea9c05117757d086493b72aad2584c69b",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_f710c5ea754ee944.dds": {
+    "source": null,
+    "sha256": "f710c5ea754ee944c4cd8b75413b68bbb2ee6ab6b9b82f2c0a58f645c0f85cee",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_14960c68b03df6f8.dds": {
+    "source": null,
+    "sha256": "14960c68b03df6f850d2f789ca6bc8d55f49f49ce4e98e45c8a3de02e6e948b7",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_d0f528442adbfa6e.dds": {
+    "source": null,
+    "sha256": "d0f528442adbfa6e621d832e59ead7122146ccc9b320860b95bd8c89890fb592",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_f1abea58542ea0b3.dds": {
+    "source": "structures/Bells/bt_m.dds",
+    "sha256": "f1abea58542ea0b3f96b6c0dcc81aa809e54031db2c89e8a5c2bec90ebe2d37b",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_51f455219ea2f672.dds": {
+    "source": "structures/Catapult/cat_pm.dds",
+    "sha256": "51f455219ea2f6723eb42eec8c6a833be25becf731a442ab8b80aa2b0ef10191",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_554a30c96ce6fa9d.dds": {
+    "source": "structures/Coop/Coop_pm.dds",
+    "sha256": "554a30c96ce6fa9d65eade0afd33bad477e5aff755385676b39dd77e8f54ce27",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_85d50045efda17e9.dds": {
+    "source": null,
+    "sha256": "85d50045efda17e958e67b1ea9df81f5ea6faf7befa6323aa364f23c19c2fe96",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_718cb71dffe8a17e.dds": {
+    "source": null,
+    "sha256": "718cb71dffe8a17e37491d7920a6b354297a5bfd824e7cfdde002c539c7fce74",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_ca046696218977ea.dds": {
+    "source": "structures/Hoppers/bsb_pm.dds",
+    "sha256": "ca046696218977ea6d70e7178208cea63b58a0045bdb68ac48381101a196886a",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_3a76e9464faccc4d.dds": {
+    "source": "structures/Hoppers/ho_pm.dds",
+    "sha256": "3a76e9464faccc4dedcdcea5d5a10357c732b0d05c171b10c81b1a089df1dc40",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_d20220cad035786e.dds": {
+    "source": "structures/Hoppers/tb_pm.dds",
+    "sha256": "d20220cad035786ece62fc368fa2ce480ff1d45e02cdf89a83ccd3bfdc73d051",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_f49478b2eb46d34a.dds": {
+    "source": "structures/Hoppers/st_pm.dds",
+    "sha256": "f49478b2eb46d34a38d0c3efec6270ec7ec7dc0659d8df1a070037909bd857f3",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_b03bae90800fd559.dds": {
+    "source": null,
+    "sha256": "b03bae90800fd559387dd89dee30c8787c8615d334305a78bdb723af7338a4d7",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_13814912da140265.dds": {
+    "source": "structures/MarketStall/stall_pm.dds",
+    "sha256": "13814912da140265cfc4dc018d9ecf1183d36760658ff37cfbf31863b84eac86",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_1c3bbd323561f1f5.dds": {
+    "source": null,
+    "sha256": "1c3bbd323561f1f5719a18b880f279f3968e2d01b85ccfaf16a82f5b10e3d8c9",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_996d761ef3f223f1.dds": {
+    "source": null,
+    "sha256": "996d761ef3f223f1f00eb7b631a208fdf919aae3448aac1d583da1f2684e6fb0",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_8a0050d099c1a44a.dds": {
+    "source": null,
+    "sha256": "8a0050d099c1a44a35cc1ed4d97580d67b4eabb4a8b78e783dea528ee07e4de2",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_caad7db3bc75b5af.dds": {
+    "source": "structures/Signs/sign_pm.dds",
+    "sha256": "caad7db3bc75b5afefaac8169741b6dc54c0fc2dff00d21f6ff5997dcd5817a5",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_5a843f7e8a3577ea.dds": {
+    "source": "structures/Signs/signpoint_pm.dds",
+    "sha256": "5a843f7e8a3577eac8f3206294b7c9124f3c19a3522d2a68bc1a50b19a068d21",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_f01669828e6c255c.dds": {
+    "source": null,
+    "sha256": "f01669828e6c255c8e66e662169fda46bbdbed2c56f41fb38254998c6a1f4962",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_a16ac6de330ade71.dds": {
+    "source": null,
+    "sha256": "a16ac6de330ade717db4ef2f0298b86b3676532002d8bde1ea40b239b08a73ec",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_265eaedd4dff35b5.dds": {
+    "source": null,
+    "sha256": "265eaedd4dff35b50ccf93e6a9a9eac24a78297237a2f2e0c2befd9d72edfe0e",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_adc3cd005ba1303d.dds": {
+    "source": null,
+    "sha256": "adc3cd005ba1303dbae25c9e4cc53c1f758c19e4fdb40659c3111fe8f5c40540",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_3c068f67525bebd5.dds": {
+    "source": null,
+    "sha256": "3c068f67525bebd5eb4aa0f03177baa8fa5a74450bb2b0f7d26f54147fd53b81",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_933eb6b1fa355fe5.dds": {
+    "source": null,
+    "sha256": "933eb6b1fa355fe5f1ea374ec18adf0ebaf1bdaa5dc35e6ad877c60899ff48d7",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_046a18dda365b050.dds": {
+    "source": null,
+    "sha256": "046a18dda365b050689be3a4ac4b339c9517e4f243b4f42eb85b81919ef6bc67",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_4e6b234bcdcb0f59.dds": {
+    "source": null,
+    "sha256": "4e6b234bcdcb0f59e3787eab81204c3d199b3dcc462a5288d5be8a49a4f6f5a2",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_6aa46017da534c65.dds": {
+    "source": null,
+    "sha256": "6aa46017da534c651f05a54e2ed4c1c15cdecf4d23cc2dd60d7935139d9b0ce8",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_9ebeac691f02935e.dds": {
+    "source": null,
+    "sha256": "9ebeac691f02935e05f378b2cb0a9e3d7d32fdb6b6c1dd440f0d35f0178e3745",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_f34cad8ef82fa6c8.dds": {
+    "source": null,
+    "sha256": "f34cad8ef82fa6c8eb369966e299d77cbb7e72a3913e9569796d3e9e8af5433c",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_fc5f72bf083e7f3d.dds": {
+    "source": null,
+    "sha256": "fc5f72bf083e7f3d56addcbe5dab58a05516c307a5363793b43043d0696e4b2b",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_752806fc063c4e68.dds": {
+    "source": "tools/Fishingrod/rod_pm.dds",
+    "sha256": "752806fc063c4e6869e4ed8753d1d2836b001b87f89ac06fc4223391b0fcd0b0",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_e9cb8547d6713814.dds": {
+    "source": "tools/Loom/loom_pm.dds",
+    "sha256": "e9cb8547d671381433ec58555274c47acc7b9c4cfe00abe632ed031ce2930920",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_49d87e3595566470.dds": {
+    "source": null,
+    "sha256": "49d87e35955664701dfdd1881adc8d0172440f1631ce0af08db1a7a584523214",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_1e6b4bf146ab0a2c.dds": {
+    "source": null,
+    "sha256": "1e6b4bf146ab0a2cbfb6d334fcc695e09b31a3b87aab4b08259efd454c139723",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_2d30b31065ca7d0d.dds": {
+    "source": "tools/arrow_pm.dds",
+    "sha256": "2d30b31065ca7d0d67e0fad250b6a8b7150b16f451bccdce583c091a3786dc3c",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_ca8e402ef4d7f7fb.dds": {
+    "source": "tools/barrel/olitub_pm.dds",
+    "sha256": "ca8e402ef4d7f7fbc28bc8a938ab2ad67a28b0d209bc6e793e252ad40dadc714",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_a68fb6861a3a9b4f.dds": {
+    "source": "tools/barrel/olitub_unf_pm.dds",
+    "sha256": "a68fb6861a3a9b4f1590cfa9f1f20da81ae2926484815ab8e927a0555b0beb87",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_827460af15fb1d73.dds": {
+    "source": "tools/barrel/winebarrel_pm.dds",
+    "sha256": "827460af15fb1d7360ff9185d97a191a88c4a25b670b6548e62893e12650d47d",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_22569df81129f39b.dds": {
+    "source": "tools/s1_pm.dds",
+    "sha256": "22569df81129f39bb77b96ad99434da2225f29f0c3b512532b8b4f2af584063b",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_4b7f09295460f486.dds": {
+    "source": null,
+    "sha256": "4b7f09295460f486d5ae56f80210fe04e457b9b756f5f36f6012981ee1198dc3",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_4a1e0ec91af3d21a.dds": {
+    "source": null,
+    "sha256": "4a1e0ec91af3d21af79f884dd92672a34cc86dcef0f1bcbd90c9580531f86b71",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_b8caa3f945531f3a.dds": {
+    "source": null,
+    "sha256": "b8caa3f945531f3ada0c7c42756a0f0d27288524101fb0ee6de8547a7866f4fa",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_d6997eec5020b8dd.dds": {
+    "source": "tools/brush_pm.dds",
+    "sha256": "d6997eec5020b8ddfdfa852e1d150f61fa4f57f8114738f16dc56367eeb4d1fc",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_98b5d184eb011be4.dds": {
+    "source": null,
+    "sha256": "98b5d184eb011be41e26809dd259950fe29c3848c51174ee1483c46fec9a3607",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_7fab096daff4c40a.dds": {
+    "source": null,
+    "sha256": "7fab096daff4c40aff269e1d2ee8ecd8a26802f3e1736dcab72a6bc1bda37c61",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_14920d31da2f6280.dds": {
+    "source": "tools/s3_pm.dds",
+    "sha256": "14920d31da2f6280f8ecd1765297a881c90ce82323c110e70316994fecc72cd6",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_45f420d6dc0b8a1f.dds": {
+    "source": null,
+    "sha256": "45f420d6dc0b8a1f8c266d20f58f5ef07a19d21570e52e11d11d4b66ac62e31d",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_fe797716c3a53717.dds": {
+    "source": null,
+    "sha256": "fe797716c3a53717a87e7cac4443fcab0cb2109dcc41d2c6b29365e17ad93edc",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_5329f438246b21df.dds": {
+    "source": "tools/ropetool_pm.dds",
+    "sha256": "5329f438246b21df4e6ad89e06d6be9792aa4828c3a34b2c31ee7895b8300a33",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_2bbc99a3c36a6046.dds": {
+    "source": "tools/shovel_mm.dds",
+    "sha256": "2bbc99a3c36a60469dcb4e57ca64f9a8c76d9f784b20b758949ce4b79b49465a",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_72ed449808ac87f0.dds": {
+    "source": null,
+    "sha256": "72ed449808ac87f025209b597b79239a2764b04ba0a0a9c99196b712c9e81ebf",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_5cea889ee21f91f0.dds": {
+    "source": null,
+    "sha256": "5cea889ee21f91f0994c92e37b0ce77fd3447de444df402e4aa80059f27b1f18",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_4375b44f0c3726f9.dds": {
+    "source": null,
+    "sha256": "4375b44f0c3726f957ba895088c9d93508f4c923082dfb05c9bf567f503001d4",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_73c2bc0934982505.dds": {
+    "source": null,
+    "sha256": "73c2bc0934982505ab47f6f6bdee63a04f6b8a76471b7365926eb8c3ce730f33",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_1c064b6e60737ac1.dds": {
+    "source": null,
+    "sha256": "1c064b6e60737ac151b79d440b9b3735b15bf8260cc9135819c04616cfd153f2",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_7d7a0e74da58edef.dds": {
+    "source": null,
+    "sha256": "7d7a0e74da58edefed2d0483166713a0c6654ec0ae5595976718270faeb486a0",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_a0dde9d3183951dd.dds": {
+    "source": "transports/ss_pm.dds",
+    "sha256": "a0dde9d3183951dd414db4f42b62c3092fda31802d5fb2bcfbb5f8fccd7ae1ee",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_82834461562b3d37.dds": {
+    "source": "transports/cart_m.dds",
+    "sha256": "82834461562b3d3711cdb339d613b3003a0cc15fbf2139934d32123f2c25ea37",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_47a8bb59ed68e938.dds": {
+    "source": "transports/Ships/caravel_pm.dds",
+    "sha256": "47a8bb59ed68e9382c8e5009a901335a7457ee1f3cd5c2154275ffbf8af5484a",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_bbf60d7b257bb8f9.dds": {
+    "source": "transports/Ships/cog_pm.dds",
+    "sha256": "bbf60d7b257bb8f90d54a7cdfe4e34201df8bf74ab498214e1d76a7553538fa6",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_013eff15902a1f11.dds": {
+    "source": "transports/Ships/corbita_pm.dds",
+    "sha256": "013eff15902a1f11e2f0872de7c82b9936537258c5a1699b3b2921c59018c7b2",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_c51231448e85b05a.dds": {
+    "source": "transports/Ships/knarr_pm.dds",
+    "sha256": "c51231448e85b05a05691af735b3739700573e4451f3cf8ee77a4e5fc90d612a",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_1dc42107127ca3d5.dds": {
+    "source": null,
+    "sha256": "1dc42107127ca3d5dfd0af5ac5c5ea5f5c4ad4df280d6c1710787645a772c356",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_30a963388d17911c.dds": {
+    "source": "weapon/Polearms/spears_pm.dds",
+    "sha256": "30a963388d17911c92687722e182900e7e8e7192b4f9e09cac817cf8ca77fcdc",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_3142d1edcc3485b8.dds": {
+    "source": "weapon/Polearms/staff_pm.dds",
+    "sha256": "3142d1edcc3485b8c8faf35dda2b6dcebae50fdfe3de1c0d7b0e44c4338cff4d",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_641c4e51de98f408.dds": {
+    "source": null,
+    "sha256": "641c4e51de98f4088f2b9b18be130bed168eacc6d50e00f9f6aca8ad1cde75d3",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_8a52ad4925a15e58.dds": {
+    "source": null,
+    "sha256": "8a52ad4925a15e58098b195f9fac73897789abd1b51d857f0a65c98a26b904ec",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_720a7a96e4a40042.dds": {
+    "source": "weapon/Shields/LargeMetal_mm.dds",
+    "sha256": "720a7a96e4a400422183b0b8bd66d98cf293ce329d98b287744241d52f1ce6a2",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_3676ac9df656841b.dds": {
+    "source": "weapon/Shields/lw_pm.dds",
+    "sha256": "3676ac9df656841b658328208eacea33c9ba4520a6bd19f9ea5474823532867c",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_d527f87cebd44477.dds": {
+    "source": "weapon/Shields/MediumMetal_mm.dds",
+    "sha256": "d527f87cebd444772ed858384552195152ce842714069a4dbb6fafe1c3297017",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_81b60dde4dd28a01.dds": {
+    "source": "weapon/Shields/mw_pm.dds",
+    "sha256": "81b60dde4dd28a0138c97e4a497b882f5eeef8579959924f99f3a015214a778b",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_e6661e5f9436657e.dds": {
+    "source": "weapon/Shields/SmallMetal_mm.dds",
+    "sha256": "e6661e5f9436657e2fa4341f1856d467b67a53bfe3defcd46ee32723fe7aafcd",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_07bc4ea898ceaee6.dds": {
+    "source": "weapon/Shields/sw_pm.dds",
+    "sha256": "07bc4ea898ceaee6175959022e2ddd90500b1e4e849f83b2b0958013336eb60b",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_2fbdbf0bf2cbef20.dds": {
+    "source": null,
+    "sha256": "2fbdbf0bf2cbef202bc2fa55ec3436472482d4d83d091f750ee95daa33984c9e",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_5eda4ebf3b9db088.dds": {
+    "source": null,
+    "sha256": "5eda4ebf3b9db088dca40d8fa9a862049a7bacf6f45f0687ba635af97e548e28",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_c62672966e7aa1c6.dds": {
+    "source": "weapon/bow_pm.dds",
+    "sha256": "c62672966e7aa1c6099e7b69a48308e23a632f1ce5dbe836fd4ba6bb4f3ac243",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_0ee89596901b51e7.dds": {
+    "source": null,
+    "sha256": "0ee89596901b51e76d072362c1c704eb3fe61850f62513e60dc14f7b29e5a942",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_53a66815b3bbe34f.dds": {
+    "source": null,
+    "sha256": "53a66815b3bbe34fd82b2c9d9d34a661b03f04d74e314b5d67041d569b9e7969",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_0127c6c39cd44f19.dds": {
+    "source": "furniture/Bookshelves/bsh_pm.dds",
+    "sha256": "0127c6c39cd44f1953703e55f94e4750babe32991ed37005827cfb4d153ea88b",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_8623585311ec53f9.dds": {
+    "source": "furniture/Bookshelves/bsl_pm.dds",
+    "sha256": "8623585311ec53f9ddcee2d0d352b95220b1f9c43d0c81a9de0e44f0936365d9",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_3495db41d3c8df94.dds": {
+    "source": "furniture/HighChairs/hc_pm.dds",
+    "sha256": "3495db41d3c8df944984d3d9593491db5dbd13fd0694e9a4d7f1dd246e6ca290",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_3875042bc7844f42.dds": {
+    "source": null,
+    "sha256": "3875042bc7844f420e7269275e796cf441b9965b225ae86bca5f4879bc26237e",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_06cf0b2dcec48bed.dds": {
+    "source": null,
+    "sha256": "06cf0b2dcec48bed8118021b20f3af10ef9c7e1ec98ca1ef789b6b65c6654e68",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_55995b5863f0444c.dds": {
+    "source": null,
+    "sha256": "55995b5863f0444cd1bbedd1f183180fca25c75d3df230b68df65af0498b7959",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_126a5967ef6c4c85.dds": {
+    "source": null,
+    "sha256": "126a5967ef6c4c85233cc06e1b170d82984a4f953a204e4e96a9c3af206660fd",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_728e69cc647970b2.dds": {
+    "source": null,
+    "sha256": "728e69cc647970b2917e137cb43a1967eaa7c94f4f50b2d6111e7536926fbbc3",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_9c95b572bd3412ba.dds": {
+    "source": null,
+    "sha256": "9c95b572bd3412ba6ead43f8936ab6996d48dbeb13386d38b464256b5a0fd314",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_a4ecadbb494fc3e1.dds": {
+    "source": null,
+    "sha256": "a4ecadbb494fc3e123b4afd918a31cb6ed2acefbd185e158643507fce27d689b",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_e053d83e2eca9fb7.dds": {
+    "source": null,
+    "sha256": "e053d83e2eca9fb7e0ab7b0891b0dfaa92c3bac92c7f970d36829b8a2618d8ad",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_b3735a778ddd7f63.dds": {
+    "source": null,
+    "sha256": "b3735a778ddd7f63eae68ae7d75c782fa89ec5714354fdfa50b77f3c1c58088d",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_a854a3508f9e3c19.dds": {
+    "source": null,
+    "sha256": "a854a3508f9e3c1939fd4d1620db66341281374c228f38f3af4eeae4e3ee86a0",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_36eccbe5c9b33861.dds": {
+    "source": null,
+    "sha256": "36eccbe5c9b33861aab07fd487a12d7cfa24c31f8e963fed7135257698d4bccd",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_d87dff2acd510df2.dds": {
+    "source": null,
+    "sha256": "d87dff2acd510df22bb8e3da808b482e5c3716527b77025e7f46bf6ef1106a79",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_d143240fa0233770.dds": {
+    "source": null,
+    "sha256": "d143240fa0233770ae846b33a08655b1bed85e278031a4b34d1922ab2d37616c",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_8f0be5895db20b31.dds": {
+    "source": "structures/Altars/wooden_pm.dds",
+    "sha256": "8f0be5895db20b31cc5a83b1099925c8db134b2727e401266e17a621ede7943a",
+    "mode": "stock semantic mask"
+  },
+  "material_colors_wood_9a254d79880d70e8.dds": {
+    "source": null,
+    "sha256": "9a254d79880d70e88e5ac6ba17ce553bb66f27f6e8c4b20201e80c64a3776924",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_d1638f867ef1f5d8.dds": {
+    "source": null,
+    "sha256": "d1638f867ef1f5d879330ce24c1dbffee70ba71193c8a609842adcc174e50767",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_e165213889ba97a6.dds": {
+    "source": null,
+    "sha256": "e165213889ba97a6db7b790c9a80c3684b5602707f2c4912deb288591fa02801",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_0a8df4e2757fac37.dds": {
+    "source": null,
+    "sha256": "0a8df4e2757fac37dce565606d231c35baa8b08d0f94dc42b88d6ad67adf0f4a",
+    "mode": "reviewed wood-region mask"
+  },
+  "material_colors_wood_af7c3c62efa6a855.dds": {
+    "source": null,
+    "sha256": "af7c3c62efa6a855ffdfcdf13e18f132b24dff52340e0cc76d62623ffd6d336e",
+    "mode": "reviewed wood-region mask"
+  }
+}

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.armormaterialcolors'
-version = '0.3.28'
+version = '0.5.1'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -122,6 +122,9 @@ task verifyArtifact(dependsOn: [jar, resourcePack]) {
         [
                 'org/armormaterialcolors/client/ArmorMaterialColorsMod.class',
                 'org/armormaterialcolors/client/MetalPalette.class',
+                'org/armormaterialcolors/client/WoodPalette.class',
+                'org/armormaterialcolors/client/WorldWoodMasks.class',
+                'org/armormaterialcolors/client/wood-model-masks.tsv',
                 'org/armormaterialcolors/client/ReflectionResources.class',
                 'org/armormaterialcolors/client/ReflectionTuning.class',
                 'org/armormaterialcolors/client/PlayerArmorReflection.class',
@@ -169,6 +172,20 @@ task verifyArtifact(dependsOn: [jar, resourcePack]) {
         def mappings = shaderContents.matching { include 'mappings.txt' }
                 .singleFile
                 .getText('UTF-8')
+        def woodRules = contents.matching {
+            include 'org/armormaterialcolors/client/wood-model-masks.tsv'
+        }.singleFile.getText('UTF-8')
+        def woodMarkers = woodRules.readLines().findAll {
+            it && !it.startsWith('#')
+        }.collect { it.split('\\t')[1] }.toSet()
+        if (woodMarkers.size() < 100)
+            throw new GradleException('Wood material mask set is incomplete')
+        woodMarkers.each { marker ->
+            if (shaderContents.matching { include "wood-masks/${marker}" }.files.size() != 1)
+                throw new GradleException('Missing or duplicate wood material mask: ' + marker)
+            if (!mappings.contains("wood.material.mask.${marker} = wood-masks/${marker}"))
+                throw new GradleException('Unmapped wood material mask: ' + marker)
+        }
         [
                 'shader.dirlight.fragment = programs/modern/dirlight.fragment.shader',
                 'shader.mask_gbuffer.fragment = programs/modern/mask_gbuffer.fragment.shader',

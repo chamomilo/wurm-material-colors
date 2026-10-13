@@ -28,13 +28,13 @@ import java.util.logging.Logger;
 public final class ArmorMaterialColorsMod
         implements WurmClientMod, Configurable, PreInitable, Initable,
         ModListener {
-    public static final String VERSION = "0.3.28";
+    public static final String VERSION = "0.5.1";
     static final float DEFAULT_REFLECTION_STRENGTH = ReflectionTuning.DEFAULT_REFLECTION_STRENGTH;
     static final float REFLECTIVE_ITEM_MARKER = -1.0f;
     static final float REFLECTIVE_ARMOR_MARKER = -2.0f;
 
     private static volatile String resourcePack =
-            "mods/armor-material-colors/armor-material-colors-resources-0.3.28.jar";
+            "mods/armor-material-colors/armor-material-colors-resources-" + VERSION + ".jar";
 
     private static final Logger LOG = Logger.getLogger("ArmorMaterialColors");
 
@@ -45,8 +45,30 @@ public final class ArmorMaterialColorsMod
 
     @Override
     public void configure(Properties properties) {
+        properties.setProperty("resourcePack", currentResourcePack(properties.getProperty("resourcePack", resourcePack)));
+        properties = org.chamomilo.wurm.update.SharedModSettings.configure("armor-material-colors",properties,
+                ModSettingsSchema.specs(),(key,values) -> ReflectionTuning.configure(values));
         ReflectionTuning.configure(properties);
-        resourcePack = properties.getProperty("resourcePack", resourcePack).trim();
+        resourcePack = currentResourcePack(properties.getProperty("resourcePack", resourcePack));
+        properties.setProperty("resourcePack", resourcePack);
+        org.chamomilo.wurm.update.SharedModSettings.Provider editor =
+                org.chamomilo.wurm.update.SharedModSettings.provider("armor-material-colors");
+        if (!resourcePack.equals(editor.value("resourcePack"))) {
+            try {
+                editor.change("resourcePack", resourcePack);
+            } catch (Exception failure) {
+                LOG.log(java.util.logging.Level.WARNING, "Could not save the upgraded resource-pack path", failure);
+            }
+        }
+    }
+
+    static String currentResourcePack(String configured) {
+        String value = configured.trim();
+        String normalized = value.replace('\\', '/');
+        if (normalized.matches("mods/armor-material-colors/armor-material-colors-resources-\\d+\\.\\d+\\.\\d+\\.jar")) {
+            return "mods/armor-material-colors/armor-material-colors-resources-" + VERSION + ".jar";
+        }
+        return value;
     }
 
     @Override
@@ -94,6 +116,8 @@ public final class ArmorMaterialColorsMod
                 }).insertAfter(
                 "{ org.armormaterialcolors.client.WorldArmorMasks"
                         + ".attachMask($1, $2);"
+                        + " org.armormaterialcolors.client.WorldWoodMasks"
+                        + ".attachMasks($1, $2);"
                         + " org.armormaterialcolors.client.WorldEquipmentMasks"
                         + ".attachMasks($1, $2); }");
 
@@ -113,6 +137,9 @@ public final class ArmorMaterialColorsMod
                                             + " armorMask = org.armormaterialcolors"
                                             + ".client.WorldArmorMasks"
                                             + ".resolveDerivedMask($1);"
+                                            + " if (armorMask == null) armorMask ="
+                                            + " org.armormaterialcolors.client.WorldWoodMasks"
+                                            + ".resolveDerivedMask($1);"
                                             + " $_ = armorMask == null"
                                             + " ? $proceed($$) : armorMask; }");
                         }
@@ -128,6 +155,8 @@ public final class ArmorMaterialColorsMod
         pool.getCtClass("com.wurmonline.client.renderer.model.collada.material.ColladaMaterial")
                 .getDeclaredMethod("processOverrides", new CtClass[]{resourceUrlType})
                 .insertAfter("{ org.armormaterialcolors.client.WornArmorTextures"
+                        + ".neutralizeWorldTexture($0, $1);"
+                        + " org.armormaterialcolors.client.WorldWoodMasks"
                         + ".neutralizeWorldTexture($0, $1); }");
 
         CtClass program = pool.getCtClass(
@@ -262,6 +291,11 @@ public final class ArmorMaterialColorsMod
     /** Supplies the same reference palette for held, worn and dropped items. */
     public static Color enhanceEquipmentMaterialColor(
             String modelName, Color vanillaColor) {
+        String wood = WoodPalette.materialForModel(modelName);
+        if (wood != null) {
+            return WoodPalette.color(wood, vanillaColor != null && vanillaColor.a >= 0.0f
+                    ? vanillaColor.a : 1.0f);
+        }
         String material = materialForSupportedEquipment(modelName);
         if (material == null) {
             return vanillaColor;
@@ -298,7 +332,7 @@ public final class ArmorMaterialColorsMod
             }
             // A later wood suffix is the actual material, even if the base
             // item's name happens to contain a metal word.
-            if (tokens[index].endsWith("wood")) {
+            if (WoodPalette.isWood(tokens[index]) || tokens[index].endsWith("wood")) {
                 return null;
             }
         }
@@ -316,7 +350,7 @@ public final class ArmorMaterialColorsMod
     static void resetSettingsForTests() {
         ReflectionTuning.resetDefaults();
         resourcePack =
-                "mods/armor-material-colors/armor-material-colors-resources-0.3.27.jar";
+                "mods/armor-material-colors/armor-material-colors-resources-" + VERSION + ".jar";
     }
 
     /**

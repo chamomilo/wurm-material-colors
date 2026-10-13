@@ -87,12 +87,11 @@ public class MetalPaletteTest {
     }
 
     @Test
-    public void materialNamesCannotRecolorCreaturesOrWoodOrMatchSubstrings() {
+    public void materialNamesCannotRecolorCreaturesOrUnknownWoodOrMatchSubstrings() {
         Color stock = new Color(0.3f, 0.4f, 0.5f, 0.4f);
         for (String model : new String[]{null, "model.creature.quadraped.horse.gold",
                 "model.corpse.horse.gold", "model.tool.hammer.seryllwood",
-                "model.tool.hammer.adamantinewood", "model.tool.hammer.gold.oakenwood",
-                "model.weapon.club.birchwood", "img.icon.shovel.gold"}) {
+                "model.tool.hammer.adamantinewood", "img.icon.shovel.gold"}) {
             assertSame(model, stock, ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(model, stock));
             assertNull(model, ArmorMaterialColorsMod.reflectiveMaterialForModel(model));
         }

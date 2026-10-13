@@ -1,0 +1,315 @@
+<itemcolors>
+
+	<applewood>
+		<color>
+			<r>1.1</r>
+			<g>0.99</g>
+			<b>0.67</b>
+		</color>
+	</applewood>
+
+	<birchwood>
+		<color>
+			<r>1.2</r>
+			<g>1.24</g>
+			<b>1.3</b>
+		</color>
+	</birchwood>
+
+	<cherrywood>
+		<color>
+			<r>1.25</r>
+			<g>1.0</g>
+			<b>1.02</b>
+		</color>
+	</cherrywood>
+
+	<chestnut>
+		<color>
+			<r>0.97</r>
+			<g>0.85</g>
+			<b>0.9</b>
+		</color>
+	</chestnut>
+
+	<cedarwood>
+		<color>
+			<r>1.228</r>
+			<g>1.141</g>
+			<b>1.005</b>
+		</color>
+	</cedarwood>
+
+	<firwood>
+		<color>
+			<r>1.37</r>
+			<g>1.34</g>
+			<b>1.43</b>
+		</color>
+	</firwood>
+
+	<lavenderwood>
+		<color>
+			<r>0.84</r>
+			<g>0.67</g>
+			<b>0.96</b>
+		</color>
+	</lavenderwood>
+
+	<rosewood>
+		<color>
+			<r>0.98</r>
+			<g>0.65</g>
+			<b>0.47</b>
+		</color>
+	</rosewood>
+
+	<thorn>
+		<color>
+			<r>0.33</r>
+			<g>0.43</g>
+			<b>0.33</b>
+		</color>
+	</thorn>
+
+	<grapewood>
+		<color>
+			<r>0.64</r>
+			<g>0.80</g>
+			<b>0.50</b>
+		</color>
+	</grapewood>
+
+	<ivy>
+		<color>
+			<r>0.81</r>
+			<g>0.984</g>
+			<b>0.67</b>
+		</color>
+	</ivy>
+
+	<camelliawood>
+		<color>
+			<r>0.69</r>
+			<g>0.63</g>
+			<b>0.48</b>
+		</color>
+	</camelliawood>
+
+	<hazelnutwood>
+		<color>
+			<r>0.86</r>
+			<g>0.67</g>
+			<b>0.36</b>
+		</color>
+	</hazelnutwood>
+
+	<raspberrywood>
+		<color>
+			<r>0.861</r>
+			<g>0.476</g>
+			<b>0.578</b>
+		</color>
+	</raspberrywood>
+
+	<blueberrywood>
+		<color>
+			<r>0.51</r>
+			<g>0.56</g>
+			<b>0.85</b>
+		</color>
+	</blueberrywood>
+
+	<lingonberrywood>
+		<color>
+			<r>0.79</r>
+			<g>0.29</g>
+			<b>0.27</b>
+		</color>
+	</lingonberrywood>
+
+	<lemonwood>
+		<color>
+			<r>1.24</r>
+			<g>1.04</g>
+			<b>0.876</b>
+		</color>
+	</lemonwood>
+
+	<lindenwood>
+		<color>
+			<r>1.11</r>
+			<g>1.15</g>
+			<b>1.03</b>
+		</color>
+	</lindenwood>
+
+	<maplewood>
+		<color>
+			<r>1.15</r>
+			<g>1.09</g>
+			<b>0.87</b>
+		</color>
+	</maplewood>
+
+	<oakenwood>
+		<color>
+			<r>0.77</r>
+			<g>0.75</g>
+			<b>0.68</b>
+		</color>
+	</oakenwood>
+
+	<oleanderwood>
+		<color>
+			<r>0.59</r>
+			<g>0.63</g>
+			<b>0.67</b>
+		</color>
+	</oleanderwood>
+
+	<olivewood>
+		<color>
+			<r>1.4</r>
+			<g>1.29</g>
+			<b>1.03</b>
+		</color>
+	</olivewood>
+
+	<orangewood>
+		<color>
+			<r>1.44</r>
+			<g>1.14</g>
+			<b>0.976</b>
+		</color>
+	</orangewood>
+
+	<pinewood>
+		<color>
+			<r>1.5</r>
+			<g>1.53</g>
+			<b>1.57</b>
+		</color>
+	</pinewood>
+
+	<walnut>
+		<color>
+			<r>0.7</r>
+			<g>0.65</g>
+			<b>0.7</b>
+		</color>
+	</walnut>
+
+	<willow>
+		<color>
+			<r>1.0</r>
+			<g>1.15</g>
+			<b>1.28</b>
+		</color>
+	</willow>
+
+	<brass>
+		<color>
+			<r>0.823</r>
+			<g>0.69</g>
+			<b>0.553</b>
+		</color>
+	</brass>
+
+	<bronze>
+		<color>
+			<r>0.588</r>
+			<g>0.384</g>
+			<b>0.215</b>
+		</color>
+	</bronze>
+
+	<copper>
+		<color>
+			<r>0.72</r>
+			<g>0.45</g>
+			<b>0.218</b>
+		</color>
+	</copper>
+
+	<gold>
+		<color>
+			<r>0.968</r>
+			<g>0.721</g>
+			<b>0.208</b>
+		</color>
+	</gold>
+
+	<lead>
+		<color>
+			<r>0.51</r>
+			<g>0.54</g>
+			<b>0.59</b>
+		</color>
+	</lead>
+
+	<silver>
+		<color>
+			<r>0.68</r>
+			<g>0.756</g>
+			<b>0.776</b>
+		</color>
+	</silver>
+
+	<steel>
+		<color>
+			<r>0.57</r>
+			<g>0.60</g>
+			<b>0.65</b>
+		</color>
+	</steel>
+
+	<seryll>
+		<color>
+			<r>0.65</r>
+			<g>0.17</g>
+			<b>0.06</b>
+		</color>
+	</seryll>
+
+	<tin>
+		<color>
+			<r>0.68</r>
+			<g>0.66</g>
+			<b>0.60</b>
+		</color>
+	</tin>
+
+	<zinc>
+		<color>
+			<r>0.91</r>
+			<g>0.87</g>
+			<b>0.77</b>
+		</color>
+	</zinc>
+
+	<glimmersteel>
+		<color>
+			<r>0.86</r>
+			<g>0.82</g>
+			<b>0.59</b>
+		</color>
+	</glimmersteel>
+
+	<adamantine>
+		<color>
+			<r>0.55</r>
+			<g>0.67</g>
+			<b>0.86</b>
+		</color>
+	</adamantine>
+
+	<electrum>
+		<color>
+			<r>0.886</r>
+			<g>0.862</g>
+			<b>0.425</b>
+		</color>
+	</electrum>
+
+</itemcolors>

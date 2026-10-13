@@ -1,126 +1,123 @@
 # Material Colors
 
-Metal colours and reflections for **Wurm Unlimited**. This client mod gives
-weapons, tools, shields and armour a consistent finish based on their metal.
+Wood and metal finishes for **Wurm Unlimited**, based on the material each item is made from.
 
-**[Download 0.3.28](https://github.com/chamomilo/wurm-material-colors/releases/latest)**
-· Includes Chamomilo Updater **1.4.1** and Chamomilo UI **0.4.11**.
+**[Download 0.5.1](https://github.com/chamomilo/wurm-material-colors/releases/tag/v0.5.1)** · Requires Ago's Wurm Unlimited Client Mod Launcher.
 
 ![Gold armour and sword in Wurm Unlimited](docs/material-colors.png)
 
-## What it changes
+## Wood species
 
-- One palette for all 14 metals, based on High Res Icons, across held equipment,
-  worn plate and chain armour, helmets, shields and supported ground items/piles.
-- Orange copper, distinct cool grey lead and consistent colours on neutral
-  armour textures, without applying the metal tint twice.
-- Environment reflections on **Gold, Silver, Adamantine, Seryll and Glimmersteel**,
-  with a softer finish on armour and sharper highlights on separate items.
-- Stronger lamp and torch reflections underground, where sunlight is absent.
-  The default reflection strength is **30%**, with **2.5×** cave compensation.
-- Wooden handles, leather, dyes and transparent cutouts keep their appearance.
+All **26 stock wood materials**, including shrub woods, have their own colour.
+The mod restores missing material masks on furniture, containers, racks,
+wooden parts, tools, piles and vehicles, including the PMK wagon frame.
+Fabric, metal components and stored equipment retain their separate surfaces.
+Existing stock and custom masks take precedence.
 
-Reflections require the **modern deferred renderer**. Colour improvements also
-work with the legacy renderer. Screen-space reflections depend on the visible
-scene, lighting and viewing angle, with a sky/ground fallback.
-Custom models and pile textures without a known metal mask keep their original
-rendering.
+| Birch | Oak | Walnut |
+| --- | --- | --- |
+| ![Birch wagon](docs/wood-birchwood.png) | ![Oak wagon](docs/wood-oakenwood.png) | ![Walnut wagon](docs/wood-walnut.png) |
 
-## Metal gallery
+| Cherry | Thorn | Lingonberry |
+| --- | --- | --- |
+| ![Cherry wagon](docs/wood-cherrywood.png) | ![Thorn wagon](docs/wood-thorn.png) | ![Lingonberry wagon](docs/wood-lingonberrywood.png) |
 
-The following previews use original Wurm models and textures under identical
-studio lighting. They were rendered with the 0.3.26 palette, which is retained
-in 0.3.28; they show colour rather than in-game environment reflections.
+These previews use original game geometry and textures under the same studio
+lighting. They are colour references rather than screenshots of gameplay.
+See the [complete palette](docs/wood-references/wood-sampler-all.png), or download
+the [interactive sampler](https://raw.githubusercontent.com/chamomilo/wurm-material-colors/main/docs/wood-references/wood-sampler.html)
+and open it in a browser for five model previews per species.
 
-![Iron, Steel, Zinc, Tin and Lead on axes, helmets and shields](docs/grey-metals.png)
+The [complete model list](docs/wood-audit/added-models.md) covers 297 paths with
+missing masks in an audited mesh or pack variant. Stock house walls, floors,
+roofs and stairs retain a structural material category, so their original
+construction species cannot be recovered by a client mod. Unknown replacement
+packs may need their own mask review.
 
-![Copper, Bronze, Brass and Electrum on axes, helmets and shields](docs/warm-metals.png)
+## Metal finishes
 
-![Gold, Silver, Adamantine, Seryll and Glimmersteel on axes, helmets and shields](docs/premium-metals.png)
+One palette covers all **14 metals** on supported held and ground equipment,
+shields, helmets and worn plate/chain armour. Neutral armour textures prevent
+the material colour from being applied twice. Wooden handles, leather,
+painted details and transparent cutouts keep their appearance.
 
-## Reflections underground
+![Iron, Steel, Zinc, Tin and Lead](docs/grey-metals.png)
 
-Local lights illuminate reflected cave walls and add metal highlights. The
-comparison below shows the cave lighting improvement introduced in 0.3.27 and
-included in 0.3.28, at the same 30% reflection strength. This is a controlled
-offscreen render using stock game geometry and textures.
+![Copper, Bronze, Brass and Electrum](docs/warm-metals.png)
 
-![Glimmersteel plate jacket: cave lamp reflections before and after compensation](docs/cave-armour.png)
+![Gold, Silver, Adamantine, Seryll and Glimmersteel](docs/premium-metals.png)
+
+**Gold, Silver, Adamantine, Seryll and Glimmersteel** receive environment
+reflections, with a softer finish on armour. Reflections require the modern
+deferred renderer; material colours also work with the legacy renderer.
+The default reflection strength is **30%**.
+
+Lamp and torch reflections receive **2.5x** compensation underground.
+Screen reflections depend on the visible scene, lighting and viewing angle.
+
+![Cave lamp reflection comparison on Glimmersteel plate armour](docs/cave-armour.png)
+
+The metal gallery and cave comparison use controlled renders of stock assets.
 
 ## Installation
 
-Requires **Ago's Wurm Unlimited Client Mod Launcher**.
-
-1. Download `armor-material-colors-0.3.28.zip` from the
-   [latest release](https://github.com/chamomilo/wurm-material-colors/releases/latest).
+1. Download `armor-material-colors-0.5.1.zip` from the [release page](https://github.com/chamomilo/wurm-material-colors/releases/tag/v0.5.1).
 2. Close the game.
-3. If upgrading, remove the old `armor-material-colors-*.jar` and
-   `armor-material-colors-resources-*.jar` from `mods/armor-material-colors`.
-4. Extract the ZIP into **WurmLauncher**, merging its `mods` directory with yours.
-5. Restart the client. Re-equip or drop affected equipment if it needs refreshing.
+3. When upgrading, remove the old `armor-material-colors-*.jar` and `armor-material-colors-resources-*.jar` from `mods/armor-material-colors`.
+4. Extract the ZIP into **WurmLauncher**, merging the supplied `mods` directory.
+5. Restart the client. Re-equip or drop affected equipment if its model needs refreshing.
 
 The ZIP contains exactly four files:
 
 ```text
-mods/
-  armor-material-colors.properties
-  armor-material-colors/
-    armor-material-colors-0.3.28.jar
-    armor-material-colors-resources-0.3.28.jar
-    README.txt
+mods/armor-material-colors.properties
+mods/armor-material-colors/armor-material-colors-0.5.1.jar
+mods/armor-material-colors/armor-material-colors-resources-0.5.1.jar
+mods/armor-material-colors/README.txt
 ```
 
-The illustrated README and gallery stay in this repository. Licence notices
-are included inside the mod JAR.
+The gallery and source stay in this repository. Licence notices are embedded in the mod JAR.
 
-## Settings
+## Settings and updates
 
-Edit `mods/armor-material-colors.properties` while the client is closed, then
-restart it. The most useful settings are:
+Open **Main menu > Mod updates**, find **Material Colors**, and press **Settings**.
+The bundled **Chamomilo Updater 1.5.0** provides the shared Mods Registry and
+settings editor, using **Chamomilo UI 0.4.11**. All 18 product settings have hover
+help. Valid edits are saved automatically; reflection tuning applies immediately.
+Changing the resource pack requires a restart and shows a restart notice.
 
 | Setting | Default | Effect |
 | --- | --- | --- |
-| `reflectionStrength` | `0.30` | Overall reflection strength, from 0 to 1. |
-| `reflectionTint` | `0.72` | How strongly the metal hue colours reflected light. |
-| `caveLocalReflectionBoost` | `2.50` | Underground lamp/torch reflection and glint multiplier, from 0 to 4. |
-| `sunGlintStrength` | `0.28` | Direct sunlight highlights. |
-| `localGlintStrength` | `0.32` | Highlights from local lights. |
-| `glintSharpness` | `0.45` | Highlight sharpness. |
+| Reflection strength | 0.30 | Strength of environment reflections. |
+| Reflection tint | 0.72 | Amount of metal hue in reflected light. |
+| Cave local reflection boost | 2.50 | Underground local-light compensation; 0 disables the extra contribution. |
+| Sun glint strength | 0.28 | Direct sunlight highlights. |
+| Local glint strength | 0.32 | Lamp and torch highlights. |
+| Glint sharpness | 0.45 | Concentration of highlights. |
 
-`caveLocalReflectionBoost=0` disables the extra underground reflection/glint
-contribution. Surface lights retain their normal strength.
-
-Additional controls adjust environment brightness, reflection contrast,
-sky/ground/cave brightness and screen-space reflection detail, distance and
-thickness. Keep `classpath` and `resourcePack` matched to the installed JAR names.
-
-## Shared updater
-
-Chamomilo mods share one **Mod updates** window. Updater 1.4.1 selects the newest
-compatible embedded updater among active installed mods, opens GitHub release
-pages and supports English, Brazilian Portuguese, German and Russian.
-Updates are installed manually. Its language selector also applies the chosen
-language to installed mods that support it.
+See [all settings](docs/SETTINGS.md) for advanced controls and persistence.
+The shared language selector supports English, Brazilian Portuguese, German
+and Russian. Compatible Chamomilo mods share one registry and select the newest
+compatible embedded updater. It opens release pages; installation is manual.
 
 ## Build from source
 
-Use **JDK 8**, the Gradle wrapper and the Wurm client libraries
-`client-patched.jar`, `common.jar`, `javassist.jar` and `modlauncher.jar`.
-Set `WURM_CLIENT_LIBS` or pass `-PwurmClientLibDir=/path/to/libs`.
-Supply the canonical Chamomilo updater reference through
-`CHAMOMILO_UPDATER_REFERENCE` or `-PchamomiloUpdaterReference=/path/to/updater`.
-If required, pass `-PwurmJavaFxJar=/path/to/jfxrt.jar` for its UI verification.
+Use **JDK 8**, the Gradle wrapper and the client libraries `client-patched.jar`,
+`common.jar`, `javassist.jar` and `modlauncher.jar`. Set `WURM_CLIENT_LIBS` or
+pass `-PwurmClientLibDir=/path/to/libs`. The shared updater reference is configured
+through `CHAMOMILO_UPDATER_REFERENCE` or `-PchamomiloUpdaterReference=/path/to/updater`.
+Supply `-PwurmJavaFxJar=/path/to/jfxrt.jar` when its native UI probe needs JavaFX.
 
 ```text
 gradlew clean build dist
 ```
 
-The build runs the mod and updater checks, verifies the exact embedded updater
-entries and bytes, and writes the installable ZIP to `build/distributions`.
-An optional `verifyMaterialOpacityGpu` task checks shader rendering using an
-offscreen context; pass `-PwurmNativeLibDir=/path/to/nativelibs` if needed.
+The build runs the product and shared-updater checks, compares the embedded
+module byte for byte, and verifies the four-file ZIP in `build/distributions`.
+`verifyMaterialOpacityGpu` additionally checks shaders in a hidden offscreen
+context. The release's [wood coverage notes](docs/WOOD-AUDIT.md) describe its
+asset and colour verification.
 
 ## Licence
 
-[GNU General Public License v3](LICENSE). The complete source for this release
-is available in this repository under the matching release tag.
+[GNU General Public License v3](LICENSE). Source is available under the matching release tag.

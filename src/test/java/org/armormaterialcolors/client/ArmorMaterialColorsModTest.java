@@ -60,12 +60,16 @@ public class ArmorMaterialColorsModTest {
     }
 
     @Test
-    public void recolorsIronEvenWithoutAStockTintAndKeepsWoodUntouched() {
+    public void suppliesIronAndStockWoodEvenWithoutAStockTint() {
         Color fallback = new Color(0.7f, 0.7f, 0.7f);
         assertColor(ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
                 "model.tool.hammer.iron", null), 0.62f, 0.66f, 0.70f);
-        assertSame(fallback, ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
-                "model.weapon.bow.oakenwood", fallback));
+        Color wood = ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
+                "model.weapon.bow.oakenwood", fallback);
+        assertEquals(0.77f, wood.r, EPSILON);
+        assertEquals(0.75f, wood.g, EPSILON);
+        assertEquals(0.68f, wood.b, EPSILON);
+        assertEquals(fallback.a, wood.a, EPSILON);
     }
 
     @Test

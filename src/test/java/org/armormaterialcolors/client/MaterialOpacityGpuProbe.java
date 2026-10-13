@@ -104,12 +104,14 @@ public final class MaterialOpacityGpuProbe {
                 }
                 System.out.println("PASS " + name + ": 14 metal palettes, opaque equipment,"
                         + " transparent cutouts and unchanged handles");
+                verifyWoodColours(program, false);
                 GL20.glUseProgram(0);
                 GL20.glDeleteProgram(program);
             }
             System.out.println("MATERIAL_OPACITY_GPU_OK checks=" + checks);
             verifyModernMasks();
             verifyWornCompositor();
+            verifyWoodPrimaryPaint(client);
             CaveLightingGpuProbe.verify();
         } finally {
             context.destroy();
@@ -203,6 +205,7 @@ public final class MaterialOpacityGpuProbe {
                         checks += 3;
                     }
                 }
+                verifyWoodColours(program, true);
                 GL20.glUseProgram(0);
                 GL20.glDeleteProgram(program);
                 System.out.println("PASS modern mask shader instanced=" + instanced
@@ -260,6 +263,67 @@ public final class MaterialOpacityGpuProbe {
         }
         require(GL11.glGetError() == GL11.GL_NO_ERROR, "Modern OpenGL error");
         return result;
+    }
+
+    private static void verifyWoodColours(int program, boolean modern) {
+        java.util.Set<String> variants = new java.util.HashSet<String>();
+        for (String wood : WoodPalette.references().keySet()) {
+            Color color = ArmorMaterialColorsMod.enhanceEquipmentMaterialColor(
+                    "model.transports.medium.wagon.free." + wood, null);
+            texture(0, 100, 120, 80, 255);
+            texture(2, 0, 255, 0, 255);
+            if (modern) {
+                float[][] pixel = renderModern(program, color);
+                close(100f / 255f * color.r, pixel[0][0], "wood R " + wood);
+                close(120f / 255f * color.g, pixel[0][1], "wood G " + wood);
+                close(80f / 255f * color.b, pixel[0][2], "wood B " + wood);
+                // Stock G-buffer adds vec4(rarityColor, 1) to finalColor;
+                // opaque diffuse alpha is consequently 2 in this attachment.
+                close(2, pixel[0][3], "wood G-buffer alpha " + wood);
+                close(0, pixel[2][2], "wood reflection marker " + wood);
+                variants.add(Math.round(pixel[0][0] * 255) + ":" + Math.round(pixel[0][1] * 255) + ":" + Math.round(pixel[0][2] * 255));
+                texture(2, 0, 0, 0, 255);
+                pixel = renderModern(program, color);
+                close(100f / 255f, pixel[0][0], "unmasked wood R " + wood);
+                close(120f / 255f, pixel[0][1], "unmasked wood G " + wood);
+                close(80f / 255f, pixel[0][2], "unmasked wood B " + wood);
+            } else {
+                int[] pixel = render(program, color);
+                require(Math.abs(pixel[0] - Math.round(100 * color.r)) <= 1, "wood R " + wood);
+                require(Math.abs(pixel[1] - Math.round(120 * color.g)) <= 1, "wood G " + wood);
+                require(Math.abs(pixel[2] - Math.round(80 * color.b)) <= 1, "wood B " + wood);
+                require(pixel[3] == 255, "wood opacity " + wood);
+                variants.add(pixel[0] + ":" + pixel[1] + ":" + pixel[2]);
+                texture(2, 0, 0, 0, 255);
+                pixel = render(program, color);
+                require(java.util.Arrays.equals(pixel, new int[]{100, 120, 80, 255}), "unmasked wood changed " + wood);
+            }
+        }
+        require(variants.size() == 26, "Wood species collapsed in " + (modern ? "modern" : "legacy") + " renderer");
+        System.out.println("WOOD_PALETTE_GPU_OK renderer=" + (modern ? "modern" : "legacy") + " species=26");
+    }
+
+    private static void verifyWoodPrimaryPaint(JarFile client) throws Exception {
+        String vertex = VERTEX.replace("_color=vec4(1);", "_color=vec4(0.4,0.6,0.8,1);");
+        int program = link(vertex, "#version 120\n#define MAX_LIGHTS 1\n"
+                + read(client, ROOT + "masked_nolight.fragment.shader"));
+        GL20.glUseProgram(program);
+        uniform1i(program, "tex0", 0);
+        uniform1i(program, "tex2", 2);
+        uniform4f(program, "color", .4f, .6f, .8f, 1);
+        uniform4f(program, "secondarycolor", 1, 1, 1, 1);
+        for (String wood : WoodPalette.references().keySet()) {
+            Color color = WoodPalette.color(wood, 1);
+            texture(0, 100, 120, 80, 255);
+            texture(2, 255, 255, 0, 255);
+            int[] pixel = render(program, color);
+            require(Math.abs(pixel[0] - Math.round(100 * color.r * .4f)) <= 1, "painted wood R " + wood);
+            require(Math.abs(pixel[1] - Math.round(120 * color.g * .6f)) <= 1, "painted wood G " + wood);
+            require(Math.abs(pixel[2] - Math.round(80 * color.b * .8f)) <= 1, "painted wood B " + wood);
+        }
+        GL20.glUseProgram(0);
+        GL20.glDeleteProgram(program);
+        System.out.println("WOOD_PRIMARY_PAINT_GPU_OK species=26");
     }
 
     private static void close(float expected, float actual, String label) {
